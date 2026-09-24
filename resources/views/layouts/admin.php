@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 $seo ??= ['title' => 'Beheer — ScamSpotter.nl', 'robots' => 'noindex,nofollow'];
 $success = flash('success');
+$error = flash('error');
 ?>
 <!doctype html>
 <html lang="nl">
@@ -34,6 +35,7 @@ $success = flash('success');
     <section class="admin-main">
         <header class="admin-topbar"><span>ScamSpotter beheer</span><form method="post" action="<?= e(url('/admin/logout')) ?>"><?= csrf_field() ?><button class="link-button" type="submit">Uitloggen</button></form></header>
         <?php if ($success !== null): ?><div class="flash flash-success" role="status"><?= e($success) ?></div><?php endif; ?>
+        <?php if ($error !== null): ?><div class="flash flash-error" role="alert"><?= e($error) ?></div><?php endif; ?>
         <?= $content ?>
     </section>
 </div>

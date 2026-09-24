@@ -89,6 +89,7 @@ $router->post('/admin/login', [AuthController::class, 'login']);
 $router->post('/admin/logout', [AuthController::class, 'logout']);
 $router->get('/admin', [AdminController::class, 'dashboard']);
 $router->get('/admin/business', [AdminController::class, 'business']);
+$router->post('/admin/business/create', [AdminController::class, 'createBusiness']);
 $router->get('/admin/scams', [AdminController::class, 'scams']);
 $router->get('/admin/alerts', [AdminController::class, 'alerts']);
 $router->get('/admin/sources', [AdminController::class, 'sources']);

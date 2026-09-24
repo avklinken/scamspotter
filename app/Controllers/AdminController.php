@@ -10,6 +10,7 @@ use App\Repositories\ScamRepository;
 use App\Repositories\SourceRepository;
 use App\Repositories\SubmissionRepository;
 use App\Services\SeoService;
+use App\Services\BusinessProvisioningService;
 
 final class AdminController extends Controller
 {
@@ -34,6 +35,36 @@ final class AdminController extends Controller
     public function business(Request $request): void
     {
         require_admin();
+        $this->renderAdmin('admin/business', ['organizations' => $this->organizations()]);
+    }
+
+    public function createBusiness(Request $request): never
+    {
+        require_admin();
+        if (!$request->isPost() || !verify_csrf($request->post('_csrf'))) {
+            http_response_code(419);
+            echo 'Ongeldige sessie.';
+            exit;
+        }
+        try {
+            $result = (new BusinessProvisioningService($this->db()))->provision(
+                (string) $request->post('email', ''),
+                (string) $request->post('name', ''),
+                (string) $request->post('organization_name', ''),
+                (string) $request->post('password', ''),
+                (string) $request->post('slug', ''),
+            );
+            $this->audit('business_organization_created', 'organization', $result['organization_id'], ['account_id' => $result['account_id']]);
+            flash('success', 'Business-pilot aangemaakt. De owner kan nu inloggen.');
+        } catch (\InvalidArgumentException $exception) {
+            flash('error', $exception->getMessage());
+        }
+        Response::redirect(url('/admin/business'));
+    }
+
+    /** @return list<array<string, mixed>> */
+    private function organizations(): array
+    {
         $organizations = $this->db()->query("SELECT o.id, o.name, o.slug, o.status, o.retention_days,
                 ca.billing_email,
                 COALESCE(sub.plan_code, 'business_trial') AS plan_code,
@@ -49,7 +80,7 @@ final class AdminController extends Controller
             LEFT JOIN organization_reports r ON r.organization_id = o.id
             GROUP BY o.id, o.name, o.slug, o.status, o.retention_days, ca.billing_email, sub.plan_code, sub.status
             ORDER BY o.created_at DESC")->fetchAll();
-        $this->renderAdmin('admin/business', ['organizations' => $organizations]);
+        return $organizations;
     }
 
     public function scams(Request $request): void
