@@ -26,6 +26,11 @@ if (is_https() && (string) env('APP_ENV', 'local') === 'production' && env('HSTS
 
 $router = new Router();
 $request = new Request();
+if ($request->method() === 'HEAD') {
+    $_SERVER['REQUEST_METHOD'] = 'GET';
+    $request = new Request();
+    ob_start(static fn (string $buffer): string => '');
+}
 if (str_starts_with($request->path(), '/admin') || str_starts_with($request->path(), '/business') || str_starts_with($request->path(), '/api/')) {
     header('Cache-Control: no-store, max-age=0');
 }

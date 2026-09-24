@@ -31,8 +31,9 @@ final class Router
     public function dispatch(Request $request): mixed
     {
         $path = rtrim($request->path(), '/') ?: '/';
+        $method = $request->method() === 'HEAD' ? 'GET' : $request->method();
         foreach ($this->routes as $route) {
-            if ($route['method'] !== $request->method()) {
+            if ($route['method'] !== $method) {
                 continue;
             }
             $keys = [];
