@@ -122,6 +122,8 @@ php bin/create-business-org.php medewerker@example.com "Naam medewerker" "Voorbe
 
 Business-login: `/business/login`. De interne Outlook-add-in staat in `public/integrations/outlook/manifest.xml` en gebruikt `ReadItem`; automatische mailboxanalyse is niet ingeschakeld.
 
+Een admin kan een eerste pilotorganisatie ook aanmaken via `/admin/business`. De webflow slaat alleen de gehashte owner-authenticatie op; API-keys blijven een aparte CLI-stap.
+
 Maak alleen voor een vertrouwde machine-to-machine-client een API-key aan. De volledige key wordt één keer getoond:
 
 ```bash
