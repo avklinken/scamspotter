@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 use App\Controllers\AdminController;
 use App\Controllers\AuthController;
+use App\Controllers\BusinessApiController;
+use App\Controllers\BusinessAuthController;
+use App\Controllers\BusinessController;
 use App\Controllers\CheckerController;
 use App\Controllers\PublicController;
 use App\Controllers\ReportController;
@@ -48,6 +51,24 @@ $router->get('/check/{landing}', [CheckerController::class, 'landing']);
 
 $router->get('/melden', [ReportController::class, 'form']);
 $router->post('/melden', [ReportController::class, 'submit']);
+
+$router->get('/business/login', [BusinessAuthController::class, 'loginForm']);
+$router->post('/business/login', [BusinessAuthController::class, 'login']);
+$router->post('/business/logout', [BusinessAuthController::class, 'logout']);
+$router->get('/business', [BusinessController::class, 'dashboard']);
+$router->get('/business/check', [BusinessController::class, 'checkForm']);
+$router->post('/business/check', [BusinessController::class, 'runCheck']);
+$router->get('/business/reports', [BusinessController::class, 'reports']);
+$router->post('/business/reports/action', [BusinessController::class, 'reportAction']);
+$router->get('/business/settings', [BusinessController::class, 'settings']);
+
+$router->post('/api/v1/business/login', [BusinessAuthController::class, 'apiLogin']);
+$router->post('/api/v1/business/logout', [BusinessAuthController::class, 'apiLogout']);
+$router->get('/api/v1/business/session', [BusinessApiController::class, 'session']);
+$router->post('/api/v1/business/check', [BusinessApiController::class, 'check']);
+$router->post('/api/v1/analyse', [BusinessApiController::class, 'analyse']);
+$router->post('/api/v1/business/report', [BusinessApiController::class, 'report']);
+$router->get('/api/v1/business/usage', [BusinessApiController::class, 'usage']);
 
 $router->get('/admin/login', [AuthController::class, 'loginForm']);
 $router->post('/admin/login', [AuthController::class, 'login']);

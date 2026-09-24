@@ -129,6 +129,51 @@ if (!function_exists('require_admin')) {
     }
 }
 
+if (!function_exists('business_user')) {
+    /** @return array<string, mixed>|null */
+    function business_user(): ?array
+    {
+        start_session();
+        return isset($_SESSION['business_user']) && is_array($_SESSION['business_user']) ? $_SESSION['business_user'] : null;
+    }
+}
+
+if (!function_exists('require_business_user')) {
+    function require_business_user(): void
+    {
+        if (business_user() === null) {
+            if (str_starts_with((string) ($_SERVER['REQUEST_URI'] ?? ''), '/api/')) {
+                \App\Http\Response::json(['error' => 'authentication_required'], 401);
+            }
+            \App\Http\Response::redirect(url('/business/login'));
+        }
+    }
+}
+
+if (!function_exists('business_role_allows')) {
+    function business_role_allows(string $required): bool
+    {
+        $order = ['member' => 10, 'analyst' => 20, 'admin' => 30, 'owner' => 40];
+        $current = business_user()['role'] ?? '';
+        return ($order[(string) $current] ?? 0) >= ($order[$required] ?? PHP_INT_MAX);
+    }
+}
+
+if (!function_exists('require_business_role')) {
+    function require_business_role(string $required): void
+    {
+        require_business_user();
+        if (!business_role_allows($required)) {
+            if (str_starts_with((string) ($_SERVER['REQUEST_URI'] ?? ''), '/api/')) {
+                \App\Http\Response::json(['error' => 'forbidden'], 403);
+            }
+            http_response_code(403);
+            echo 'Geen toegang.';
+            exit;
+        }
+    }
+}
+
 if (!function_exists('old')) {
     function old(string $key, string $default = ''): string
     {

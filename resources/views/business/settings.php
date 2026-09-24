@@ -1,0 +1,4 @@
+<?php
+declare(strict_types=1);
+?>
+<div class="business-page"><div class="business-page-header"><div><p class="eyebrow">Organisatie</p><h1>Instellingen</h1><p>Basisinformatie voor de Business-pilot.</p></div></div><section class="business-card"><dl class="business-definition-list"><div><dt>Organisatie</dt><dd><?= e($organization['name'] ?? '') ?></dd></div><div><dt>Status</dt><dd><?= e($organization['status'] ?? '') ?></dd></div><div><dt>Bewaartermijn zakelijke checks</dt><dd><?= e($organization['retention_days'] ?? '') ?> dagen</dd></div><div><dt>Microsoft tenant</dt><dd><?= e($tenant['tenant_id'] ?? 'Nog niet gekoppeld') ?></dd></div><div><dt>Consentstatus</dt><dd><?= e($tenant['consent_status'] ?? 'Nog niet gekoppeld') ?></dd></div></dl><div class="business-note">De Microsoft Entra-koppeling en Outlook-deployment worden in de volgende onboardingstap geconfigureerd. Het eerste pilotpad gebruikt veilige handmatige login.</div></section></div>

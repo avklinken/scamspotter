@@ -1,0 +1,32 @@
+# ScamSpotter API v1
+
+Zakelijke API-calls gebruiken een organisatiegebonden Bearer-key. Maak een key met:
+
+```bash
+php bin/create-business-api-key.php organisatie-slug "Naam client"
+```
+
+## Analyse
+
+```http
+POST /api/v1/analyse
+Authorization: Bearer ss_live_...
+Content-Type: application/json
+
+{
+  "content_type": "email",
+  "subject": "Nieuwe betaalgegevens",
+  "sender_email": "leverancier@example.org",
+  "content": "Controleer deze factuur..."
+}
+```
+
+De response bevat een status, scamfamilie/type/variant waar herkenbaar, signalen, vervolgstap en aanbevolen actie. Interne matchscores zijn geen publieke kansberekening.
+
+## Business endpoints
+
+- `POST /api/v1/business/check` — Outlook/business check.
+- `POST /api/v1/business/report` — expliciet organisatie-rapport.
+- `GET /api/v1/business/usage` — gebruik over de laatste 30 dagen.
+
+De API retourneert geen volledige opgeslagen mailbody. Gebruik TLS, roteer keys en bewaar keys alleen in een secret manager of serveromgeving.

@@ -28,7 +28,7 @@ abstract class Controller
         ob_start();
         require $viewFile;
         $content = (string) ob_get_clean();
-        $layout = str_starts_with($view, 'admin/') ? 'admin' : (str_starts_with($view, 'auth/') ? 'auth' : 'app');
+        $layout = str_starts_with($view, 'admin/') ? 'admin' : (str_starts_with($view, 'auth/') ? 'auth' : (str_starts_with($view, 'business/') ? 'business' : 'app'));
         require BASE_PATH . '/resources/views/layouts/' . $layout . '.php';
     }
 

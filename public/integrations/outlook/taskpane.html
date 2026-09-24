@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ScamSpotter Business</title>
+    <link rel="stylesheet" href="/assets/css/app.css">
+    <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+</head>
+<body class="outlook-pane">
+<main id="outlook-app" class="outlook-card">
+    <img src="/assets/icons/logo.svg" alt="ScamSpotter.nl" width="190" height="36">
+    <p class="eyebrow">ScamSpotter Business</p>
+    <h1>Herken de truc.</h1>
+    <p class="outlook-muted">Controleer deze e-mail op bekende scamwerkwijzen en menselijke manipulatie.</p>
+    <section data-view="loading" class="outlook-view"><p>Verbinden met ScamSpotter…</p></section>
+    <section data-view="login" class="outlook-view" hidden><h2>Inloggen</h2><form data-login-form><label>E-mailadres<input name="email" type="email" autocomplete="username" required></label><label>Wachtwoord<input name="password" type="password" autocomplete="current-password" required></label><button class="button button-orange" type="submit">Inloggen</button><p class="outlook-error" data-login-error></p></form></section>
+    <section data-view="ready" class="outlook-view" hidden><div class="outlook-message-meta"><strong data-subject>Huidige e-mail</strong><span data-sender></span></div><button class="button button-orange outlook-full" data-check>Controleer met ScamSpotter →</button><p class="outlook-muted outlook-small">De volledige inhoud wordt alleen voor deze analyse verwerkt. Een rapport wordt alleen aangemaakt als je dat zelf kiest.</p></section>
+    <section data-view="result" class="outlook-view" hidden><div class="outlook-status" data-status></div><h2 data-result-title>Resultaat</h2><p data-result-explanation></p><div class="outlook-signal-box" data-match hidden><strong data-match-name></strong><span data-match-type></span><ul data-signals></ul></div><button class="button button-orange outlook-full" data-report>Meld als verdacht</button><button class="button button-ghost outlook-full" data-reset>Nieuwe controle</button><p class="outlook-muted outlook-small" data-result-note></p></section>
+</main>
+<script src="/integrations/outlook/taskpane.js"></script>
+</body>
+</html>

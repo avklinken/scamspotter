@@ -96,11 +96,32 @@ OpenAI is optioneel. Configureer in `.env`:
 OPENAI_API_KEY=
 OPENAI_MODEL=gpt-4o-mini
 OPENAI_TIMEOUT=30
+AI_CHECK_MODE=all
 ```
 
 De integratie gebruikt de Responses API met Structured Outputs en `store=false`. De API-key komt nooit in de browser. Output wordt server-side gevalideerd en opgeslagen als voorstel; publicatie gebeurt niet automatisch.
 
 Zonder API-key blijven de lokale indicator-matching, checker-resultaten en cron-review-architectuur werken.
+
+## ScamSpotter Business
+
+De eerste Business-pilot gebruikt handmatige Outlook-controles. De publieke site en Business-omgeving delen de ScamSpotter-kennisbank, maar zakelijke checks en meldingen staan in tenantgebonden tabellen en worden niet automatisch publiek gemaakt.
+
+Maak voor een lokale pilot een organisatie en Business-owner aan:
+
+```bash
+php bin/create-business-org.php medewerker@example.com "Naam medewerker" "Voorbeeld BV" 'gebruik-een-lang-uniek-wachtwoord' voorbeeld-bv
+```
+
+Business-login: `/business/login`. De interne Outlook-add-in staat in `public/integrations/outlook/manifest.xml` en gebruikt `ReadItem`; automatische mailboxanalyse is niet ingeschakeld.
+
+Maak alleen voor een vertrouwde machine-to-machine-client een API-key aan. De volledige key wordt één keer getoond:
+
+```bash
+php bin/create-business-api-key.php voorbeeld-bv "Pilot API"
+```
+
+Zie `docs/commercial-architecture.md` en `docs/outlook-add-in.md` voor de commerciële grenzen, dataminimalisatie, tenantisolatie en Microsoft 365-onboarding.
 
 ## Publieke routes
 

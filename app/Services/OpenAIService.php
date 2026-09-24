@@ -5,9 +5,18 @@ namespace App\Services;
 
 final class OpenAIService
 {
+    /** @var array{input_tokens?: int, output_tokens?: int} */
+    private array $lastUsage = [];
+
     public function enabled(): bool
     {
         return (string) env('OPENAI_API_KEY', '') !== '';
+    }
+
+    /** @return array{input_tokens?: int, output_tokens?: int} */
+    public function lastUsage(): array
+    {
+        return $this->lastUsage;
     }
 
     /**
@@ -89,6 +98,7 @@ final class OpenAIService
             return null;
         }
         $response = json_decode((string) $raw, true);
+        $this->recordUsage(is_array($response) ? $response : []);
         $text = $this->extractText(is_array($response) ? $response : []);
         $result = is_string($text) ? json_decode($text, true) : null;
         return is_array($result) && isset($result['classification']) ? $result : null;
@@ -158,6 +168,16 @@ final class OpenAIService
         return null;
     }
 
+    /** @param array<string, mixed> $response */
+    private function recordUsage(array $response): void
+    {
+        $usage = $response['usage'] ?? null;
+        $this->lastUsage = is_array($usage) ? [
+            'input_tokens' => isset($usage['input_tokens']) ? (int) $usage['input_tokens'] : 0,
+            'output_tokens' => isset($usage['output_tokens']) ? (int) $usage['output_tokens'] : 0,
+        ] : [];
+    }
+
     /** @param array<string, mixed> $payload @return array<string, mixed>|null */
     private function request(array $payload): ?array
     {
@@ -181,6 +201,7 @@ final class OpenAIService
             return null;
         }
         $response = json_decode((string) $raw, true);
+        $this->recordUsage(is_array($response) ? $response : []);
         $text = $this->extractText(is_array($response) ? $response : []);
         $decoded = is_string($text) ? json_decode($text, true) : null;
         return is_array($decoded) ? $decoded : null;

@@ -7,6 +7,8 @@ final class Request
 {
     /** @var array<string, mixed> */
     private array $input;
+    /** @var array<string, mixed>|null */
+    private ?array $json = null;
 
     public function __construct()
     {
@@ -49,6 +51,37 @@ final class Request
     public function all(): array
     {
         return $this->input;
+    }
+
+    /** @return array<string, mixed> */
+    public function json(): array
+    {
+        if ($this->json !== null) {
+            return $this->json;
+        }
+        $raw = file_get_contents('php://input');
+        $decoded = is_string($raw) && $raw !== '' ? json_decode($raw, true) : [];
+        $this->json = is_array($decoded) ? $decoded : [];
+        return $this->json;
+    }
+
+    public function header(string $name, ?string $default = null): ?string
+    {
+        $key = 'HTTP_' . strtoupper(str_replace('-', '_', $name));
+        $value = $_SERVER[$key] ?? null;
+        if ($name === 'Content-Type') {
+            $value = $_SERVER['CONTENT_TYPE'] ?? $value;
+        }
+        return is_string($value) && $value !== '' ? $value : $default;
+    }
+
+    public function bearerToken(): ?string
+    {
+        $authorization = $this->header('Authorization', '');
+        if (is_string($authorization) && preg_match('/^Bearer\s+(.+)$/i', $authorization, $matches) === 1) {
+            return trim($matches[1]);
+        }
+        return null;
     }
 
     public function ip(): string

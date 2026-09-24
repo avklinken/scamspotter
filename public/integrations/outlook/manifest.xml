@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0" xmlns:mailappor="http://schemas.microsoft.com/office/mailappversion" xsi:type="MailApp">
+  <Id>4c73eb9b-3211-4c4b-9bb8-7c6e8cb4d8e9</Id>
+  <Version>1.0.0.0</Version>
+  <ProviderName>ScamSpotter.nl</ProviderName>
+  <DefaultLocale>nl-NL</DefaultLocale>
+  <DisplayName DefaultValue="ScamSpotter Business" />
+  <Description DefaultValue="Legt uit welke scamwerkwijze achter verdachte zakelijke communicatie zit." />
+  <IconUrl DefaultValue="https://scamspotter.nl/assets/icons/favicon.svg" />
+  <HighResolutionIconUrl DefaultValue="https://scamspotter.nl/assets/icons/favicon.svg" />
+  <SupportUrl DefaultValue="https://scamspotter.nl/contact" />
+  <AppDomains><AppDomain>https://scamspotter.nl</AppDomain></AppDomains>
+  <Hosts><Host Name="Mailbox" /></Hosts>
+  <Requirements><Sets><Set Name="Mailbox" MinVersion="1.5" /></Sets></Requirements>
+  <FormSettings>
+    <Form xsi:type="ItemRead"><DesktopSettings><SourceLocation DefaultValue="https://scamspotter.nl/integrations/outlook/taskpane.html" /><RequestedHeight>450</RequestedHeight></DesktopSettings></Form>
+  </FormSettings>
+  <Permissions>ReadItem</Permissions>
+  <Rule xsi:type="RuleCollection" Mode="And"><Rule xsi:type="ItemIs" ItemType="Message" FormType="Read" /></Rule>
+  <DisableEntityHighlighting>true</DisableEntityHighlighting>
+</OfficeApp>

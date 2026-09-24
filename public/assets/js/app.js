@@ -88,4 +88,27 @@
     if (choice === 'accept') loadAnalytics();
     notice.hidden = true;
   }));
+
+  const reportForm = document.querySelector('[data-business-report]');
+  if (reportForm) {
+    reportForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const status = reportForm.querySelector('[data-business-report-status]');
+      const data = new FormData(reportForm);
+      try {
+        const response = await fetch(reportForm.action, {
+          method: 'POST',
+          credentials: 'same-origin',
+          headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': data.get('_csrf') || '' },
+          body: JSON.stringify({ check_id: Number(data.get('check_id')), description: data.get('description') || '' })
+        });
+        const payload = await response.json();
+        if (!response.ok) throw new Error(payload.error || 'Melden mislukt.');
+        if (status) status.textContent = 'De melding is ontvangen door je organisatie.';
+        reportForm.querySelector('button')?.setAttribute('disabled', 'disabled');
+      } catch (error) {
+        if (status) status.textContent = error.message || 'Melden mislukt.';
+      }
+    });
+  }
 })();
