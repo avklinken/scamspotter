@@ -36,3 +36,5 @@ Elke zakelijke query moet de organisatiecontext uit een geauthenticeerde sessie,
 ## Pricing hypothesis
 
 Start met organisatiebundels met actieve gebruikersbanden en fair-use checks. Gebruik €39/€79/€149 eventueel als design-partnerprijzen; herprijs na pilots op basis van supporttijd, activatie en retentie. API- en Protect-usage kunnen later apart worden gemeten.
+
+De applicatie heeft hiervoor al een plan-/usage-laag (`account_subscriptions`, `PlanService`, `usage_events`) zonder betaalprovider. Daarmee kan een pilotplan zichtbaar en meetbaar worden gemaakt voordat facturatie wordt gekoppeld.
