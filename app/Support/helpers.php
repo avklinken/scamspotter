@@ -141,6 +141,21 @@ if (!function_exists('business_user')) {
 if (!function_exists('require_business_user')) {
     function require_business_user(): void
     {
+        $user = business_user();
+        if (is_array($user)) {
+            $db = $GLOBALS['app']['db'] ?? null;
+            if ($db instanceof PDO) {
+                $membership = (new \App\Services\BusinessAuthService($db))->findMembership((int) ($user['id'] ?? 0), (int) ($user['organization_id'] ?? 0));
+                if (is_array($membership)) {
+                    $_SESSION['business_user']['role'] = (string) $membership['role'];
+                    $_SESSION['business_user']['organization_name'] = (string) $membership['organization_name'];
+                    return;
+                }
+                unset($_SESSION['business_user']);
+            } else {
+                return;
+            }
+        }
         if (business_user() === null) {
             if (str_starts_with((string) ($_SERVER['REQUEST_URI'] ?? ''), '/api/')) {
                 \App\Http\Response::json(['error' => 'authentication_required'], 401);

@@ -176,7 +176,13 @@ final class BusinessApiController extends Controller
     {
         $user = business_user();
         if (is_array($user)) {
-            return [(int) $user['organization_id'], (int) $user['id'], true];
+            $membership = (new BusinessAuthService($this->db()))->findMembership((int) ($user['id'] ?? 0), (int) ($user['organization_id'] ?? 0));
+            if (is_array($membership)) {
+                $_SESSION['business_user']['role'] = (string) $membership['role'];
+                $_SESSION['business_user']['organization_name'] = (string) $membership['organization_name'];
+                return [(int) $user['organization_id'], (int) $user['id'], true];
+            }
+            unset($_SESSION['business_user']);
         }
         $key = $request->bearerToken();
         $record = $key !== null ? (new BusinessAuthService($this->db()))->authenticateApiKey($key) : null;

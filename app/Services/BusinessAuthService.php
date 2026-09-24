@@ -60,6 +60,7 @@ final class BusinessAuthService
         $statement = $this->db->prepare("SELECT om.organization_id, om.user_id, om.role, o.name AS organization_name,
                 o.status AS organization_status
             FROM organization_memberships om INNER JOIN organizations o ON o.id = om.organization_id
+            INNER JOIN business_users bu ON bu.id = om.user_id AND bu.status = 'active'
             WHERE om.user_id = :user_id AND om.organization_id = :organization_id
               AND om.status = 'active' AND o.status IN ('trial', 'active') LIMIT 1");
         $statement->execute(['user_id' => $userId, 'organization_id' => $organizationId]);
