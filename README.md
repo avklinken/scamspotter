@@ -140,6 +140,7 @@ Zie `docs/commercial-architecture.md` en `docs/outlook-add-in.md` voor de commer
 - `/zoeken` — site search
 - `/melden/` — expliciete gebruikersmelding
 - `/over-scamspotter/`, `/over-scamspotter/werkwijze/`, `/bronnen/`
+- `/voor-organisaties` — commerciële uitleg en Business-pilot
 - `/sitemap.xml`, `/robots.txt`
 
 ## Beheer
