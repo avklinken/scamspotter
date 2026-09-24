@@ -34,7 +34,10 @@ if (!function_exists('url')) {
 if (!function_exists('asset')) {
     function asset(string $path): string
     {
-        return url('/assets/' . ltrim($path, '/'));
+        $relative = 'assets/' . ltrim($path, '/');
+        $file = BASE_PATH . '/public/' . $relative;
+        $version = is_file($file) ? (string) filemtime($file) : '';
+        return url('/' . $relative) . ($version !== '' ? '?v=' . rawurlencode($version) : '');
     }
 }
 
