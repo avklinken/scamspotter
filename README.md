@@ -60,6 +60,8 @@ De inhoudshiërarchie is: **scamfamilie → scamtype → scamvariant → actuele
    php bin/create-admin.php admin@example.com "ScamSpotter beheer" 'gebruik-een-lang-uniek-wachtwoord'
    ```
 
+   Controleer daarna de productieomgeving met `php bin/healthcheck.php`.
+
 7. Start lokaal met de ingebouwde server:
 
    ```bash
