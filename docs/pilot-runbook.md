@@ -5,7 +5,8 @@
 1. Log in op `/admin` en open **Business**.
 2. Maak één organisatie, owner en tijdelijk sterk wachtwoord aan.
 3. Laat de owner inloggen op `/business/login`.
-4. Noteer de organisatie, pilotperiode en afgesproken bewaartermijn; deel geen checker-inhoud via losse e-mail.
+4. Nodig vanuit **Organisatie** teamleden uit; deel de tijdelijke link alleen met de bedoelde medewerker.
+5. Noteer de organisatie, pilotperiode en afgesproken bewaartermijn; deel geen checker-inhoud via losse e-mail.
 
 ## 2. Outlook installeren
 

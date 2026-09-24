@@ -8,6 +8,7 @@ use App\Http\Response;
 use App\Repositories\ScamRepository;
 use App\Services\BusinessAuthService;
 use App\Services\BusinessApiKeyService;
+use App\Services\BusinessInvitationService;
 use App\Services\OpenAIService;
 use App\Services\OrganizationCheckService;
 use App\Services\PlanService;
@@ -96,8 +97,65 @@ final class BusinessController extends Controller
             'organization' => $organization,
             'tenant' => $tenant->fetch() ?: null,
             'plan' => $plan,
+            'members' => $this->members(),
             'apiKeys' => (new BusinessApiKeyService($this->db()))->list($this->organizationId()),
         ]);
+    }
+
+    public function createInvitation(Request $request): never
+    {
+        require_business_role('admin');
+        if (!$request->isPost() || !verify_csrf($request->post('_csrf'))) {
+            flash('error', 'Ongeldige sessie. Probeer opnieuw.');
+            Response::redirect(url('/business/settings'));
+        }
+        $plan = (new PlanService($this->db()))->forOrganization($this->organizationId());
+        $countStatement = $this->db()->prepare('SELECT COUNT(*) FROM organization_memberships WHERE organization_id = :organization_id AND status = \'active\'');
+        $countStatement->execute(['organization_id' => $this->organizationId()]);
+        $memberCount = (int) $countStatement->fetchColumn();
+        if ($memberCount >= (int) ($plan['plan']['max_users'] ?? 25)) {
+            flash('error', 'Het maximumaantal gebruikers van dit plan is bereikt.');
+            Response::redirect(url('/business/settings'));
+        }
+        try {
+            $invite = (new BusinessInvitationService($this->db()))->create(
+                $this->organizationId(),
+                (string) $request->post('email', ''),
+                (string) $request->post('role', 'member'),
+            );
+            $this->event('member_invitation_created', 'organization_invitation', $invite['id']);
+            flash('invite_link', url('/business/invite/' . $invite['token']));
+            flash('success', 'Uitnodiging aangemaakt. Deel de link veilig met de medewerker.');
+        } catch (\InvalidArgumentException $exception) {
+            flash('error', $exception->getMessage());
+        }
+        Response::redirect(url('/business/settings'));
+    }
+
+    public function invitationForm(Request $request, string $token): void
+    {
+        $invite = (new BusinessInvitationService($this->db()))->find($token);
+        $this->renderBusiness('business/invite', [
+            'invite' => $invite,
+            'token' => $token,
+            'errors' => $invite === null ? ['Deze uitnodiging is verlopen of al gebruikt.'] : [],
+        ], $invite === null ? 410 : 200);
+    }
+
+    public function acceptInvitation(Request $request, string $token): void
+    {
+        $invite = (new BusinessInvitationService($this->db()))->find($token);
+        if (!$request->isPost() || !verify_csrf($request->post('_csrf'))) {
+            $this->renderBusiness('business/invite', ['invite' => $invite, 'token' => $token, 'errors' => ['Ongeldige sessie. Probeer opnieuw.']], 419);
+            return;
+        }
+        try {
+            (new BusinessInvitationService($this->db()))->accept($token, (string) $request->post('name', ''), (string) $request->post('password', ''));
+            flash('success', 'Je account is aangemaakt. Je kunt nu inloggen bij ScamSpotter Business.');
+            Response::redirect(url('/business/login'));
+        } catch (\InvalidArgumentException $exception) {
+            $this->renderBusiness('business/invite', ['invite' => $invite, 'token' => $token, 'errors' => [$exception->getMessage()]], 422);
+        }
     }
 
     public function createApiKey(Request $request): never
@@ -194,6 +252,16 @@ final class BusinessController extends Controller
     private function userId(): int
     {
         return (int) (business_user()['id'] ?? 0);
+    }
+
+    /** @return list<array<string, mixed>> */
+    private function members(): array
+    {
+        $statement = $this->db()->prepare('SELECT bu.name, bu.email, bu.last_login_at, om.role, om.status
+            FROM organization_memberships om INNER JOIN business_users bu ON bu.id = om.user_id
+            WHERE om.organization_id = :organization_id ORDER BY FIELD(om.role, \'owner\', \'admin\', \'analyst\', \'member\'), bu.name');
+        $statement->execute(['organization_id' => $this->organizationId()]);
+        return $statement->fetchAll();
     }
 
     private function event(string $type, string $entityType, int $entityId): void

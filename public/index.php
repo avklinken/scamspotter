@@ -67,12 +67,15 @@ $router->post('/melden', [ReportController::class, 'submit']);
 $router->get('/business/login', [BusinessAuthController::class, 'loginForm']);
 $router->post('/business/login', [BusinessAuthController::class, 'login']);
 $router->post('/business/logout', [BusinessAuthController::class, 'logout']);
+$router->get('/business/invite/{token}', [BusinessController::class, 'invitationForm']);
+$router->post('/business/invite/{token}/accept', [BusinessController::class, 'acceptInvitation']);
 $router->get('/business', [BusinessController::class, 'dashboard']);
 $router->get('/business/check', [BusinessController::class, 'checkForm']);
 $router->post('/business/check', [BusinessController::class, 'runCheck']);
 $router->get('/business/reports', [BusinessController::class, 'reports']);
 $router->post('/business/reports/action', [BusinessController::class, 'reportAction']);
 $router->get('/business/settings', [BusinessController::class, 'settings']);
+$router->post('/business/settings/invite', [BusinessController::class, 'createInvitation']);
 $router->post('/business/settings/api-key', [BusinessController::class, 'createApiKey']);
 $router->post('/business/settings/api-key/revoke', [BusinessController::class, 'revokeApiKey']);
 

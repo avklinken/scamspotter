@@ -5,6 +5,7 @@ $seo ??= ['title' => 'ScamSpotter Business', 'robots' => 'noindex,nofollow'];
 $success = flash('success');
 $error = flash('error');
 $apiKey = flash('api_key');
+$inviteLink = flash('invite_link');
 ?>
 <!doctype html>
 <html lang="nl">
@@ -38,6 +39,7 @@ $apiKey = flash('api_key');
         <?php if ($success !== null): ?><div class="flash flash-success" role="status"><?= e($success) ?></div><?php endif; ?>
         <?php if ($error !== null): ?><div class="flash flash-error" role="alert"><?= e($error) ?></div><?php endif; ?>
         <?php if ($apiKey !== null): ?><div class="flash flash-key" role="status"><strong>Nieuwe API-key — kopieer deze nu:</strong><code><?= e($apiKey) ?></code><span>Om veiligheidsredenen wordt deze key niet opnieuw getoond.</span></div><?php endif; ?>
+        <?php if ($inviteLink !== null): ?><div class="flash flash-key" role="status"><strong>Uitnodigingslink — deel deze veilig:</strong><code><?= e($inviteLink) ?></code><span>De link is zeven dagen geldig en wordt daarna niet meer getoond.</span></div><?php endif; ?>
         <?= $content ?>
     </section>
 </div>
