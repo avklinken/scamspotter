@@ -12,6 +12,7 @@ final class MatchingService
         private ScamRepository $scams,
         private CheckRepository $checks,
         private ?ScamAnalysisService $analysis = null,
+        private ?ScamAnalysisOrchestrator $orchestrator = null,
     ) {
         $this->analysis ??= new ScamAnalysisService($this->scams);
     }
@@ -20,7 +21,7 @@ final class MatchingService
     /** @param array<string, string> $attribution */
     public function check(string $inputType, string $input, string $ip, ?string $campaignIdentifier = null, array $attribution = []): array
     {
-        $analysis = $this->analysis->analyze($inputType, $input);
+        $analysis = $this->orchestrator?->analyze($inputType, $input, 'public') ?? $this->analysis->analyze($inputType, $input);
         $normalized = (string) $analysis['normalized'];
         $matches = $analysis['matches'];
         $top = $matches[0] ?? null;
@@ -45,6 +46,8 @@ final class MatchingService
             'matches' => array_slice($matches, 0, 5),
             'has_match' => $top !== null,
             'input_excerpt' => $this->excerpt($input),
+            'ai_analysis' => $analysis['ai_analysis'] ?? null,
+            'usage' => $analysis['usage'] ?? [],
         ];
     }
 }

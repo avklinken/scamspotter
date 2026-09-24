@@ -26,6 +26,7 @@ final class OpenAIService
      */
     public function classify(array $source, array $candidates = []): ?array
     {
+        $this->lastUsage = [];
         if (!$this->enabled() || !function_exists('curl_init')) {
             return null;
         }
@@ -101,7 +102,7 @@ final class OpenAIService
         $this->recordUsage(is_array($response) ? $response : []);
         $text = $this->extractText(is_array($response) ? $response : []);
         $result = is_string($text) ? json_decode($text, true) : null;
-        return is_array($result) && isset($result['classification']) ? $result : null;
+        return is_array($result) ? $this->validateClassification($result) : null;
     }
 
     /**
@@ -110,6 +111,7 @@ final class OpenAIService
      */
     public function analyzeCheck(string $inputType, string $input, array $matches): ?array
     {
+        $this->lastUsage = [];
         if (!$this->enabled() || !function_exists('curl_init')) {
             return null;
         }
@@ -204,7 +206,7 @@ final class OpenAIService
         $this->recordUsage(is_array($response) ? $response : []);
         $text = $this->extractText(is_array($response) ? $response : []);
         $decoded = is_string($text) ? json_decode($text, true) : null;
-        return is_array($decoded) ? $decoded : null;
+        return is_array($decoded) ? $this->validateChecker($decoded) : null;
     }
 
     /** @param array<string, mixed> $context */
@@ -212,5 +214,74 @@ final class OpenAIService
     {
         $line = sprintf("[%s] %s %s\n", date('c'), $message, json_text($context));
         file_put_contents(BASE_PATH . '/storage/logs/app.log', $line, FILE_APPEND | LOCK_EX);
+    }
+
+    /** @param array<string, mixed> $result @return array<string, mixed>|null */
+    private function validateClassification(array $result): ?array
+    {
+        $allowed = ['duplicate', 'irrelevant', 'existing_scam', 'new_alert', 'new_variant_candidate', 'new_type_candidate', 'update_existing'];
+        if (!in_array($result['classification'] ?? null, $allowed, true)) {
+            return null;
+        }
+        foreach (['likely_next_step', 'reasoning_summary', 'recommended_editorial_action', 'duplicate_status'] as $field) {
+            if (!is_string($result[$field] ?? null)) {
+                return null;
+            }
+            $result[$field] = mb_substr($result[$field], 0, 2000);
+        }
+        foreach (['family', 'type', 'variant'] as $field) {
+            $value = $result[$field] ?? null;
+            if ($value !== null && !is_string($value)) {
+                return null;
+            }
+            if (is_string($value)) {
+                $result[$field] = mb_substr($value, 0, 255);
+            }
+        }
+        foreach (['recognized_signals', 'suggested_tags'] as $field) {
+            if (!$this->isStringList($result[$field] ?? null)) {
+                return null;
+            }
+            $result[$field] = array_map(static fn (string $value): string => mb_substr($value, 0, 500), array_slice($result[$field], 0, 20));
+        }
+        return $result;
+    }
+
+    /** @param array<string, mixed> $result @return array<string, mixed>|null */
+    private function validateChecker(array $result): ?array
+    {
+        $allowed = ['strong_match', 'suspicious_signals', 'possible_match', 'no_match', 'insufficient_information'];
+        if (!in_array($result['status'] ?? null, $allowed, true)) {
+            return null;
+        }
+        foreach (['family', 'type', 'variant'] as $field) {
+            $value = $result[$field] ?? null;
+            if ($value !== null && !is_string($value)) {
+                return null;
+            }
+            if (is_string($value)) {
+                $result[$field] = mb_substr($value, 0, 255);
+            }
+        }
+        if (!is_string($result['likely_next_step'] ?? null) || !$this->isStringList($result['recognized_signals'] ?? null) || !$this->isStringList($result['advice'] ?? null)) {
+            return null;
+        }
+        $result['likely_next_step'] = mb_substr($result['likely_next_step'], 0, 2000);
+        $result['recognized_signals'] = array_map(static fn (string $value): string => mb_substr($value, 0, 500), array_slice($result['recognized_signals'], 0, 20));
+        $result['advice'] = array_map(static fn (string $value): string => mb_substr($value, 0, 500), array_slice($result['advice'], 0, 20));
+        return $result;
+    }
+
+    private function isStringList(mixed $value): bool
+    {
+        if (!is_array($value)) {
+            return false;
+        }
+        foreach ($value as $item) {
+            if (!is_string($item)) {
+                return false;
+            }
+        }
+        return true;
     }
 }

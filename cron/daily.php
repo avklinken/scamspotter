@@ -4,6 +4,7 @@ declare(strict_types=1);
 use App\Database;
 use App\Repositories\ScamRepository;
 use App\Services\OpenAIService;
+use App\Services\RetentionService;
 
 if (PHP_SAPI !== 'cli') {
     http_response_code(404);
@@ -89,7 +90,8 @@ try {
             markSourceFailure($db, (int) $source['id'], $exception->getMessage());
         }
     }
-    $db->exec('DELETE FROM checks WHERE expires_at < NOW()');
+    $purged = (new RetentionService($db))->purge();
+    $stats['purged'] = array_sum($purged);
     $summary = sprintf('%d bronnen gecontroleerd, %d nieuwe items, %d duplicaten, %d review-items, %d fouten', $stats['sources'], $stats['items'], $stats['duplicates'], $stats['reviews'], $stats['failures']);
     $finish = $db->prepare("UPDATE cron_runs SET finished_at = NOW(), status = :status, summary = :summary, stats_json = :stats WHERE id = :id");
     $finish->execute(['status' => $stats['failures'] > 0 ? 'partial' : 'success', 'summary' => $summary, 'stats' => json_text($stats), 'id' => $jobId]);

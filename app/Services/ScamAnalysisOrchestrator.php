@@ -25,6 +25,7 @@ final class ScamAnalysisOrchestrator
         return [
             'channel' => $channel,
             'input_type' => $inputType,
+            'normalized' => $local['normalized'],
             'status' => $local['status'],
             'top_match' => $local['top_match'],
             'matches' => $local['matches'],

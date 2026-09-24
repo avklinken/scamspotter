@@ -71,6 +71,13 @@
       document.querySelector('[data-result-note]').textContent = 'De melding is naar je organisatie gestuurd.';
     } catch (error) { document.querySelector('[data-result-note]').textContent = error.message; }
   });
+  document.querySelectorAll('[data-feedback]').forEach((button) => button.addEventListener('click', async (event) => {
+    event.currentTarget.disabled = true;
+    try {
+      await json('/api/v1/business/feedback', { method: 'POST', headers: { 'X-CSRF-Token': state.csrf }, body: JSON.stringify({ check_id: state.checkId, feedback: event.currentTarget.dataset.feedback }) });
+      document.querySelector('[data-result-note]').textContent = 'Bedankt voor je feedback.';
+    } catch (error) { document.querySelector('[data-result-note]').textContent = error.message; }
+  }));
   document.querySelector('[data-reset]').addEventListener('click', () => { show('ready'); });
   const escapeHtml = (value) => String(value).replace(/[&<>'"]/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#039;', '"': '&quot;' }[character]));
   if (window.Office) Office.onReady(loadSession); else loadSession();

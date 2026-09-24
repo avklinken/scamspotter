@@ -181,8 +181,9 @@ final class ScamRepository
     /** @return list<array<string, mixed>> */
     public function matchCandidates(string $text): array
     {
-        $statement = $this->db->query("SELECT v.id, v.name, v.slug, v.summary, t.name AS type_name, t.slug AS type_slug,
-                f.name AS family_name, f.slug AS family_slug, i.id AS indicator_id, i.indicator_type, i.value,
+        $statement = $this->db->query("SELECT v.id, v.type_id, v.name, v.slug, v.summary, t.family_id,
+                t.name AS type_name, t.slug AS type_slug, f.name AS family_name, f.slug AS family_slug,
+                i.id AS indicator_id, i.indicator_type, i.value,
                 i.normalized_value, i.explanation, COALESCE(vi.weight_override, i.weight) AS weight
                 FROM scam_variants v
                 INNER JOIN scam_types t ON t.id = v.type_id
@@ -200,6 +201,8 @@ final class ScamRepository
             $id = (int) $row['id'];
             $matches[$id]['variant'] = [
                 'id' => $id,
+                'type_id' => (int) $row['type_id'],
+                'family_id' => (int) $row['family_id'],
                 'name' => $row['name'],
                 'slug' => $row['slug'],
                 'summary' => $row['summary'],

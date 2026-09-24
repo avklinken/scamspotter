@@ -68,6 +68,7 @@ $router->get('/api/v1/business/session', [BusinessApiController::class, 'session
 $router->post('/api/v1/business/check', [BusinessApiController::class, 'check']);
 $router->post('/api/v1/analyse', [BusinessApiController::class, 'analyse']);
 $router->post('/api/v1/business/report', [BusinessApiController::class, 'report']);
+$router->post('/api/v1/business/feedback', [BusinessApiController::class, 'feedback']);
 $router->get('/api/v1/business/usage', [BusinessApiController::class, 'usage']);
 
 $router->get('/admin/login', [AuthController::class, 'loginForm']);

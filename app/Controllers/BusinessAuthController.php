@@ -6,6 +6,7 @@ namespace App\Controllers;
 use App\Http\Request;
 use App\Http\Response;
 use App\Services\BusinessAuthService;
+use App\Services\RateLimitService;
 use App\Services\SeoService;
 
 final class BusinessAuthController extends Controller
@@ -28,10 +29,15 @@ final class BusinessAuthController extends Controller
             echo 'Ongeldige sessie. Probeer opnieuw.';
             return;
         }
-        $user = (new BusinessAuthService($this->db()))->login(
-            (string) $request->post('email', ''),
-            (string) $request->post('password', ''),
-        );
+        $email = (string) $request->post('email', '');
+        if (!$this->loginAllowed($request, $email)) {
+            $this->render('business/login', [
+                'seo' => (new SeoService())->metadata(['title' => 'ScamSpotter Business login', 'robots' => 'noindex,nofollow']),
+                'error' => 'Te veel inlogpogingen. Probeer het over enkele minuten opnieuw.',
+            ], 429);
+            return;
+        }
+        $user = (new BusinessAuthService($this->db()))->login($email, (string) $request->post('password', ''));
         if ($user === null) {
             $this->render('business/login', [
                 'seo' => (new SeoService())->metadata(['title' => 'ScamSpotter Business login', 'robots' => 'noindex,nofollow']),
@@ -54,7 +60,11 @@ final class BusinessAuthController extends Controller
     public function apiLogin(Request $request): never
     {
         $data = $request->json();
-        $user = (new BusinessAuthService($this->db()))->login((string) ($data['email'] ?? ''), (string) ($data['password'] ?? ''));
+        $email = (string) ($data['email'] ?? '');
+        if (!$this->loginAllowed($request, $email)) {
+            Response::json(['error' => 'rate_limited'], 429);
+        }
+        $user = (new BusinessAuthService($this->db()))->login($email, (string) ($data['password'] ?? ''));
         if ($user === null) {
             Response::json(['error' => 'invalid_credentials'], 422);
         }
@@ -83,5 +93,14 @@ final class BusinessAuthController extends Controller
     {
         unset($_SESSION['business_user']);
         Response::json(['authenticated' => false]);
+    }
+
+    private function loginAllowed(Request $request, string $email): bool
+    {
+        $limiter = new RateLimitService($this->db());
+        $secret = (string) env('APP_KEY', '');
+        $ipKey = 'business-login:ip:' . hash('sha256', $request->ip() . '|' . $secret);
+        $emailKey = 'business-login:email:' . hash('sha256', mb_strtolower(trim($email)) . '|' . $secret);
+        return $limiter->allow($ipKey, 10, 600) && $limiter->allow($emailKey, 10, 600);
     }
 }

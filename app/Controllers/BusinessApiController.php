@@ -9,6 +9,7 @@ use App\Repositories\ScamRepository;
 use App\Services\BusinessAuthService;
 use App\Services\OpenAIService;
 use App\Services\OrganizationCheckService;
+use App\Services\RateLimitService;
 use App\Services\ScamAnalysisOrchestrator;
 use App\Services\ScamAnalysisService;
 
@@ -23,6 +24,7 @@ final class BusinessApiController extends Controller
     public function check(Request $request): never
     {
         [$organizationId, $userId, $sessionAuth] = $this->authenticate($request);
+        $this->limit($request, $organizationId, $userId, 'check');
         $data = $request->json();
         if ($sessionAuth && !hash_equals(csrf_token(), (string) ($request->header('X-CSRF-Token', '') ?? ''))) {
             Response::json(['error' => 'csrf_failed'], 419);
@@ -41,6 +43,7 @@ final class BusinessApiController extends Controller
     public function analyse(Request $request): never
     {
         [$organizationId, $userId, $sessionAuth] = $this->authenticate($request);
+        $this->limit($request, $organizationId, $userId, 'check');
         if ($sessionAuth && !hash_equals(csrf_token(), (string) ($request->header('X-CSRF-Token', '') ?? ''))) {
             Response::json(['error' => 'csrf_failed'], 419);
         }
@@ -68,6 +71,7 @@ final class BusinessApiController extends Controller
     public function report(Request $request): never
     {
         [$organizationId, $userId, $sessionAuth] = $this->authenticate($request);
+        $this->limit($request, $organizationId, $userId, 'report');
         if ($sessionAuth && !hash_equals(csrf_token(), (string) ($request->header('X-CSRF-Token', '') ?? ''))) {
             Response::json(['error' => 'csrf_failed'], 419);
         }
@@ -75,6 +79,28 @@ final class BusinessApiController extends Controller
         try {
             $id = $this->service()->report($organizationId, $userId, (int) ($data['check_id'] ?? 0), (string) ($data['description'] ?? ''));
             Response::json(['ok' => true, 'report_id' => $id], 201);
+        } catch (\InvalidArgumentException $exception) {
+            Response::json(['error' => $exception->getMessage()], 422);
+        }
+    }
+
+    public function feedback(Request $request): never
+    {
+        [$organizationId, $userId, $sessionAuth] = $this->authenticate($request);
+        $this->limit($request, $organizationId, $userId, 'feedback');
+        if ($sessionAuth && !hash_equals(csrf_token(), (string) ($request->header('X-CSRF-Token', '') ?? ''))) {
+            Response::json(['error' => 'csrf_failed'], 419);
+        }
+        $data = $request->json();
+        try {
+            $this->service()->feedback(
+                $organizationId,
+                $userId,
+                (int) ($data['check_id'] ?? 0),
+                (string) ($data['feedback'] ?? ''),
+                (string) ($data['comment'] ?? ''),
+            );
+            Response::json(['ok' => true], 201);
         } catch (\InvalidArgumentException $exception) {
             Response::json(['error' => $exception->getMessage()], 422);
         }
@@ -99,6 +125,22 @@ final class BusinessApiController extends Controller
     {
         $local = new ScamAnalysisService(new ScamRepository($this->db()));
         return new OrganizationCheckService($this->db(), new ScamAnalysisOrchestrator($local, new OpenAIService()));
+    }
+
+    private function limit(Request $request, int $organizationId, ?int $userId, string $scope): void
+    {
+        $identity = $userId !== null ? 'user:' . $userId : 'ip:' . hash('sha256', $request->ip() . '|' . (string) env('APP_KEY', ''));
+        $limit = match ($scope) {
+            'feedback' => 60,
+            'report' => 60,
+            default => max(10, (int) env('BUSINESS_CHECKS_PER_HOUR', '120')),
+        };
+        $window = $scope === 'feedback' ? 3600 : 3600;
+        $key = 'business:' . $scope . ':' . $organizationId . ':' . $identity;
+        if (!(new RateLimitService($this->db()))->allow($key, $limit, $window)) {
+            header('Retry-After: 3600');
+            Response::json(['error' => 'rate_limited'], 429);
+        }
     }
 
     /** @param array<string, mixed> $result @return array<string, mixed> */

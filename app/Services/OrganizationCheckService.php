@@ -17,6 +17,9 @@ final class OrganizationCheckService
     public function run(int $organizationId, ?int $userId, array $data): array
     {
         $inputType = trim((string) ($data['input_type'] ?? 'email'));
+        if (!in_array($inputType, ['email', 'message', 'url', 'phone'], true)) {
+            throw new \InvalidArgumentException('Dit type zakelijke controle wordt nog niet ondersteund.');
+        }
         $subject = trim((string) ($data['subject'] ?? ''));
         $sender = trim((string) ($data['sender_email'] ?? ''));
         $body = trim((string) ($data['body'] ?? ''));
@@ -42,14 +45,18 @@ final class OrganizationCheckService
         $this->db->beginTransaction();
         try {
             $run = $this->db->prepare("INSERT INTO organization_analysis_runs
-                (organization_id, user_id, channel, input_type, input_hash, status, variant_id, result_json, model, prompt_version, retention_until)
-                VALUES (:organization_id, :user_id, 'outlook_addin', :input_type, :input_hash, :status, :variant_id, :result_json, :model, 'checker-v1', :retention_until)");
+                (organization_id, user_id, channel, input_type, input_hash, status, family_id, type_id, variant_id,
+                 result_json, model, prompt_version, input_tokens, output_tokens, retention_until)
+                VALUES (:organization_id, :user_id, 'outlook_addin', :input_type, :input_hash, :status, :family_id, :type_id,
+                 :variant_id, :result_json, :model, 'checker-v1', :input_tokens, :output_tokens, :retention_until)");
             $run->execute([
                 'organization_id' => $organizationId,
                 'user_id' => $userId,
                 'input_type' => $inputType,
                 'input_hash' => $hash,
                 'status' => (string) ($result['status']['code'] ?? 'insufficient_information'),
+                'family_id' => $top['variant']['family_id'] ?? null,
+                'type_id' => $top['variant']['type_id'] ?? null,
                 'variant_id' => $top['variant_id'] ?? null,
                 'result_json' => json_text($resultForStorage),
                 'model' => (string) env('OPENAI_MODEL', 'gpt-4o-mini'),
@@ -111,6 +118,30 @@ final class OrganizationCheckService
         $reportId = (int) $this->db->lastInsertId();
         $this->event($organizationId, $userId, 'report_submitted', 'organization_report', $reportId, []);
         return $reportId;
+    }
+
+    public function feedback(int $organizationId, ?int $userId, int $checkId, string $feedback, string $comment = ''): void
+    {
+        if (!in_array($feedback, ['useful', 'not_useful', 'false_positive', 'false_negative'], true)) {
+            throw new \InvalidArgumentException('Ongeldige feedback.');
+        }
+        $check = $this->db->prepare('SELECT id FROM organization_checks WHERE id = :id AND organization_id = :organization_id LIMIT 1');
+        $check->execute(['id' => $checkId, 'organization_id' => $organizationId]);
+        if ($check->fetchColumn() === false) {
+            throw new \InvalidArgumentException('Deze zakelijke check bestaat niet binnen de organisatie.');
+        }
+        $statement = $this->db->prepare("INSERT INTO organization_check_feedback
+            (organization_id, user_id, check_id, feedback, comment)
+            VALUES (:organization_id, :user_id, :check_id, :feedback, :comment)
+            ON DUPLICATE KEY UPDATE feedback = VALUES(feedback), comment = VALUES(comment), created_at = CURRENT_TIMESTAMP");
+        $statement->execute([
+            'organization_id' => $organizationId,
+            'user_id' => $userId,
+            'check_id' => $checkId,
+            'feedback' => $feedback,
+            'comment' => mb_substr(trim($comment), 0, 1000) ?: null,
+        ]);
+        $this->event($organizationId, $userId, 'check_feedback', 'organization_check', $checkId, ['feedback' => $feedback]);
     }
 
     private function retentionDays(int $organizationId): int

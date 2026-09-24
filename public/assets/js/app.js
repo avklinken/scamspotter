@@ -111,4 +111,22 @@
       }
     });
   }
+
+  const feedback = document.querySelector('[data-business-feedback]');
+  feedback?.querySelectorAll('[data-feedback]').forEach((button) => button.addEventListener('click', async () => {
+    const status = feedback.querySelector('[data-business-feedback-status]');
+    try {
+      const response = await fetch('/api/v1/business/feedback', {
+        method: 'POST', credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': document.querySelector('input[name="_csrf"]')?.value || '' },
+        body: JSON.stringify({ check_id: Number(feedback.dataset.checkId), feedback: button.dataset.feedback })
+      });
+      const payload = await response.json();
+      if (!response.ok) throw new Error(payload.error || 'Feedback opslaan mislukt.');
+      if (status) status.textContent = 'Bedankt voor je feedback.';
+      feedback.querySelectorAll('button').forEach((item) => { item.disabled = true; });
+    } catch (error) {
+      if (status) status.textContent = error.message || 'Feedback opslaan mislukt.';
+    }
+  }));
 })();

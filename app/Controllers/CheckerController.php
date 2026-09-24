@@ -9,6 +9,8 @@ use App\Repositories\ScamRepository;
 use App\Services\MatchingService;
 use App\Services\OpenAIService;
 use App\Services\SeoService;
+use App\Services\ScamAnalysisOrchestrator;
+use App\Services\ScamAnalysisService;
 
 final class CheckerController extends Controller
 {
@@ -111,7 +113,13 @@ final class CheckerController extends Controller
             return;
         }
 
-        $service = new MatchingService(new ScamRepository($this->db()), new CheckRepository($this->db()));
+        $scams = new ScamRepository($this->db());
+        $service = new MatchingService(
+            $scams,
+            new CheckRepository($this->db()),
+            new ScamAnalysisService($scams),
+            new ScamAnalysisOrchestrator(new ScamAnalysisService($scams), new OpenAIService()),
+        );
         $attribution = [];
         foreach (['gclid', 'msclkid'] as $key) {
             $value = trim((string) $request->post($key, ''));
@@ -126,7 +134,7 @@ final class CheckerController extends Controller
             }
         }
         $result = $service->check($inputType, $input, $request->ip(), trim((string) $request->post('campaign_identifier', '')) ?: null, $attribution);
-        $ai = (new OpenAIService())->analyzeCheck($inputType, $input, $result['matches']);
+        $ai = $result['ai_analysis'] ?? null;
         if ($ai !== null && in_array($ai['status'] ?? '', ['strong_match', 'suspicious_signals', 'possible_match', 'no_match', 'insufficient_information'], true)) {
             $statement = $this->db()->prepare("INSERT INTO ai_analyses (check_id, model, prompt_version, input_hash, classification, output_json, status)
                 VALUES (:check_id, :model, 'checker-v1', :input_hash, :classification, :output_json, 'suggestion')");

@@ -27,6 +27,7 @@ De response bevat een status, scamfamilie/type/variant waar herkenbaar, signalen
 
 - `POST /api/v1/business/check` — Outlook/business check.
 - `POST /api/v1/business/report` — expliciet organisatie-rapport.
+- `POST /api/v1/business/feedback` — nuttig/niet nuttig of false-positive/false-negative feedback op een check.
 - `GET /api/v1/business/usage` — gebruik over de laatste 30 dagen.
 
-De API retourneert geen volledige opgeslagen mailbody. Gebruik TLS, roteer keys en bewaar keys alleen in een secret manager of serveromgeving.
+API-checks zijn begrensd via `BUSINESS_CHECKS_PER_HOUR` (standaard 120 per gebruiker of API-client). De API retourneert geen volledige opgeslagen mailbody. Gebruik TLS, roteer keys en bewaar keys alleen in een secret manager of serveromgeving.

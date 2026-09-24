@@ -86,7 +86,7 @@ Plan bijvoorbeeld:
 15 3 * * * cd /var/www/scamspotter && /usr/bin/php cron/daily.php >> storage/logs/cron-cli.log 2>&1
 ```
 
-De job gebruikt een filesystem-lock, registreert `cron_runs`, verwerkt alleen actieve geverifieerde bronnen, voorkomt duplicaten op URL/hash/externe ID en maakt review-items. Bronfeeds moeten als vertrouwde HTTPS-URL in de database staan. De eerste seedbronnen hebben bewust geen live feed-URL; voeg die per omgeving gecontroleerd toe.
+De job gebruikt een filesystem-lock, registreert `cron_runs`, verwerkt alleen actieve geverifieerde bronnen, voorkomt duplicaten op URL/hash/externe ID, maakt review-items en ruimt verlopen checks, zakelijke retention-data en rate-limit buckets op. Bronfeeds moeten als vertrouwde HTTPS-URL in de database staan. De eerste seedbronnen hebben bewust geen live feed-URL; voeg die per omgeving gecontroleerd toe.
 
 ## OpenAI
 
