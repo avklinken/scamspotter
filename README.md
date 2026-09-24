@@ -130,7 +130,7 @@ Maak alleen voor een vertrouwde machine-to-machine-client een API-key aan. De vo
 php bin/create-business-api-key.php voorbeeld-bv "Pilot API"
 ```
 
-Zie `docs/commercial-architecture.md` en `docs/outlook-add-in.md` voor de commerciële grenzen, dataminimalisatie, tenantisolatie en Microsoft 365-onboarding.
+Zie `docs/commercial-architecture.md`, `docs/outlook-add-in.md` en `docs/pilot-runbook.md` voor de commerciële grenzen, dataminimalisatie, tenantisolatie en Microsoft 365-onboarding.
 
 ## Publieke routes
 
