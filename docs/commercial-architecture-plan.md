@@ -149,6 +149,10 @@ De voorgestelde €39 / €79 / €149 zijn bruikbare design-partnerhypotheses, 
 
 Enterprise en MSP krijgen maatwerk met minimumcommitment, onboarding en duidelijke data-/supportgrenzen.
 
+### Betaling
+
+De pilot blijft handmatig en gratis. Voor de eerste betaalde release is Stripe Billing de voorkeursroute: hosted Checkout, Customer Portal en server-side webhooks. Daarmee blijven betaalgegevens buiten ScamSpotter en wordt `account_subscriptions` de interne bron voor planlimieten. Mollie is een mogelijke Nederlandse alternatiefkeuze wanneer iDEAL-first checkout belangrijker blijkt dan Stripe’s abonnements- en portaalfunctionaliteit, maar beide providers worden niet tegelijk geïntroduceerd. Zie `docs/billing-plan.md` voor lifecycle, btw, webhook-idempotentie en de activatiecriteria.
+
 ## 10. Pilotplan
 
 ### Fase A — publiek

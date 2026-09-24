@@ -11,18 +11,30 @@ declare(strict_types=1);
             <p class="hero-note">Je gegevens worden niet standaard opgeslagen.</p>
         </div>
         <div class="hero-visual" aria-label="Voorbeeld van ScamSpotter op een smartphone">
-            <div class="hero-signal"><small>Link check</small><strong>https://verdacht-example.com</strong><div class="signal-line"><span>Waarschijnlijk fraude</span><span>›</span></div></div>
-            <div class="mock-phone" role="img" aria-label="Mobiele ScamSpotter-check met waarschuwing voor smishing">
-                <div class="phone-side-button phone-side-button-top"></div><div class="phone-side-button phone-side-button-bottom"></div>
-                <div class="mock-screen">
-                    <div class="mock-statusbar"><span>8:41</span><span>● ● ▰</span></div>
-                    <div class="mock-appbar"><img src="<?= e(asset('icons/logo.svg')) ?>" alt="" width="128" height="24"><span aria-hidden="true">☰</span></div>
-                    <div class="mock-screen-copy"><small>SCAMSPOTTER CHECK</small><strong>Iets verdachts<br>ontvangen?</strong><p>Plak een bericht, upload een screenshot of voer een link in.</p></div>
-                    <div class="mock-input">Plak hier de tekst of link…</div>
-                    <div class="mock-input-actions"><span>▧</span><span>↗</span><span>⌕</span><span>✉</span></div>
-                    <div class="mock-cta">Controleren →</div>
-                    <p class="mock-footnote">Je gegevens worden niet opgeslagen.</p>
-                    <div class="mock-alert"><small>ACTUELE WAARSCHUWING</small><strong>Valse sms over pakket</strong><span>Actief · Smishing</span></div>
+            <div class="hero-stage">
+                <div class="hero-stage-label"><span>SCAMSPOTTER CHECK</span><strong>Blijf één stap voor.</strong></div>
+                <div class="hero-scan-card">
+                    <small>Link check</small>
+                    <strong>verdacht-example.com</strong>
+                    <div class="scan-card-result"><span aria-hidden="true">!</span><div><b>Waarschijnlijk fraude</b><small>Smishing · herkenbare signalen</small></div></div>
+                </div>
+                <div class="mock-phone" role="img" aria-label="Mobiele ScamSpotter-check met waarschuwing voor smishing">
+                    <div class="phone-button phone-button-volume"></div><div class="phone-button phone-button-silent"></div><div class="phone-button phone-button-power"></div>
+                    <div class="mock-screen">
+                        <div class="mock-statusbar"><span>8:41</span><span class="mock-island" aria-hidden="true"></span><span class="phone-status-icons" aria-hidden="true"><i class="phone-signal"></i><i class="phone-wifi"></i><i class="phone-battery"></i></span></div>
+                        <div class="mock-appbar"><img src="<?= e(asset('icons/logo.svg')) ?>" alt="" width="128" height="24"><span class="phone-menu" aria-hidden="true"><i></i><i></i><i></i></span></div>
+                        <div class="mock-screen-copy"><small>SCAMSPOTTER CHECK</small><strong>Iets verdachts<br>ontvangen?</strong><p>Plak een bericht, upload een screenshot of voer een link in. We helpen je direct.</p></div>
+                        <div class="mock-input">Plak hier de tekst of link…</div>
+                        <div class="mock-input-actions">
+                            <span aria-label="Screenshot"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"></rect><circle cx="8" cy="10" r="1.5"></circle><path d="m6 17 4-4 3 3 2-2 3 3"></path></svg></span>
+                            <span aria-label="Link"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9.5 14.5 5-5"></path><path d="m7.2 17.8-1 .9a3.2 3.2 0 0 1-4.5-4.5l3.5-3.5a3.2 3.2 0 0 1 4.5 0"></path><path d="m16.8 6.2 1-.9a3.2 3.2 0 0 1 4.5 4.5l-3.5 3.5a3.2 3.2 0 0 1-4.5 0"></path></svg></span>
+                            <span aria-label="Telefoonnummer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3.5 4.8 4.7a2 2 0 0 0-.9 2.5c1.8 5.1 5.8 9.1 10.9 10.9a2 2 0 0 0 2.5-.9l1.2-2.2-3.1-2.1-1.8 1.7a12 12 0 0 1-4.2-4.2l1.7-1.8L9.1 5.5 7 3.5Z"></path></svg></span>
+                            <span aria-label="E-mailadres"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="m4 7 8 6 8-6"></path></svg></span>
+                        </div>
+                        <div class="mock-cta"><span>Controleren</span><b>→</b></div>
+                        <p class="mock-footnote"><span aria-hidden="true">⌁</span> Je gegevens worden niet opgeslagen.</p>
+                        <div class="mock-alert"><div><small>ACTUELE WAARSCHUWING</small><strong>Valse sms over pakket</strong></div><span class="mock-alert-badge">Actief</span><p>Smishing · 8 maart 2025</p></div>
+                    </div>
                 </div>
             </div>
         </div>
