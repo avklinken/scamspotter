@@ -62,6 +62,30 @@ final class AdminController extends Controller
         Response::redirect(url('/admin/business'));
     }
 
+    public function updateBusinessStatus(Request $request): never
+    {
+        require_admin();
+        if (!$request->isPost() || !verify_csrf($request->post('_csrf'))) {
+            flash('error', 'Ongeldige sessie.');
+            Response::redirect(url('/admin/business'));
+        }
+        $organizationId = (int) $request->post('id', 0);
+        $status = (string) $request->post('status', '');
+        if ($organizationId < 1 || !in_array($status, ['trial', 'active', 'suspended', 'closed'], true)) {
+            flash('error', 'Ongeldige Business-status.');
+            Response::redirect(url('/admin/business'));
+        }
+        $statement = $this->db()->prepare('UPDATE organizations SET status = :status WHERE id = :id');
+        $statement->execute(['status' => $status, 'id' => $organizationId]);
+        if ($statement->rowCount() > 0) {
+            $this->audit('business_organization_status_changed', 'organization', $organizationId, ['status' => $status]);
+            flash('success', 'Business-status bijgewerkt.');
+        } else {
+            flash('error', 'Organisatie niet gevonden of status was al gelijk.');
+        }
+        Response::redirect(url('/admin/business'));
+    }
+
     /** @return list<array<string, mixed>> */
     private function organizations(): array
     {

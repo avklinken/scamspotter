@@ -156,6 +156,7 @@ Login op `/admin/login`. Het dashboard toont taxonomie, alerts, bronstatus, revi
 - Secure, HttpOnly, SameSite-sessies.
 - `password_hash()`/`password_verify()` voor adminaccounts.
 - Checker rate limiting per gehashte IP en tijdelijke retentie.
+- Rate limiting op admin- en Business-loginpogingen.
 - Uploads buiten `public/`, MIME- en groottelimieten, willekeurige bestandsnamen.
 - Geen automatische fetch van door gebruikers aangeleverde URL's.
 - OpenAI-output is onbetrouwbare suggestie; bronfeit, redactie, melding en AI blijven onderscheiden.

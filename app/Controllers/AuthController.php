@@ -5,6 +5,7 @@ namespace App\Controllers;
 
 use App\Http\Request;
 use App\Http\Response;
+use App\Services\RateLimitService;
 use App\Services\SeoService;
 
 final class AuthController extends Controller
@@ -31,6 +32,17 @@ final class AuthController extends Controller
             return;
         }
         $email = mb_strtolower(trim((string) $request->post('email', '')));
+        $secret = (string) env('APP_KEY', '');
+        $limiter = new RateLimitService($this->db());
+        $ipKey = 'admin-login:ip:' . hash('sha256', $request->ip() . '|' . $secret);
+        $emailKey = 'admin-login:email:' . hash('sha256', $email . '|' . $secret);
+        if (!$limiter->allow($ipKey, 10, 600) || !$limiter->allow($emailKey, 10, 600)) {
+            $this->render('auth/login', [
+                'seo' => (new SeoService())->metadata(['title' => 'Beheerlogin — ScamSpotter.nl', 'robots' => 'noindex,nofollow']),
+                'error' => 'Te veel inlogpogingen. Probeer het over enkele minuten opnieuw.',
+            ], 429);
+            return;
+        }
         $password = (string) $request->post('password', '');
         $statement = $this->db()->prepare('SELECT * FROM admin_users WHERE email = :email AND is_active = 1 LIMIT 1');
         $statement->execute(['email' => $email]);

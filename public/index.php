@@ -97,6 +97,7 @@ $router->post('/admin/logout', [AuthController::class, 'logout']);
 $router->get('/admin', [AdminController::class, 'dashboard']);
 $router->get('/admin/business', [AdminController::class, 'business']);
 $router->post('/admin/business/create', [AdminController::class, 'createBusiness']);
+$router->post('/admin/business/status', [AdminController::class, 'updateBusinessStatus']);
 $router->get('/admin/scams', [AdminController::class, 'scams']);
 $router->get('/admin/alerts', [AdminController::class, 'alerts']);
 $router->get('/admin/sources', [AdminController::class, 'sources']);

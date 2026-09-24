@@ -7,6 +7,7 @@
 3. Laat de owner inloggen op `/business/login`.
 4. Nodig vanuit **Organisatie** teamleden uit; deel de tijdelijke link alleen met de bedoelde medewerker.
 5. Noteer de organisatie, pilotperiode en afgesproken bewaartermijn; deel geen checker-inhoud via losse e-mail.
+6. Pauzeer of sluit een pilot na afloop via **Admin → Business**; beide statussen blokkeren nieuwe Business-logins zonder organisatiegegevens direct te verwijderen.
 
 ## 2. Outlook installeren
 
