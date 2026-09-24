@@ -250,6 +250,7 @@ final class BusinessApiController extends Controller
             'status' => $result['status'] ?? null,
             'top_match' => $result['top_match'] ?? null,
             'matches' => $result['matches'] ?? [],
+            'organization_signals' => $result['organization_signals'] ?? [],
             'ai_analysis' => $result['ai_analysis'] ?? null,
         ];
     }

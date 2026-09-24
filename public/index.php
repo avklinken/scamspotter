@@ -76,6 +76,8 @@ $router->get('/business/reports', [BusinessController::class, 'reports']);
 $router->post('/business/reports/action', [BusinessController::class, 'reportAction']);
 $router->get('/business/settings', [BusinessController::class, 'settings']);
 $router->post('/business/settings/invite', [BusinessController::class, 'createInvitation']);
+$router->post('/business/settings/rule', [BusinessController::class, 'createOrganizationRule']);
+$router->post('/business/settings/rule/delete', [BusinessController::class, 'deleteOrganizationRule']);
 $router->post('/business/settings/api-key', [BusinessController::class, 'createApiKey']);
 $router->post('/business/settings/api-key/revoke', [BusinessController::class, 'revokeApiKey']);
 

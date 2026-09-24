@@ -1,0 +1,3 @@
+<?php if (!empty($result['organization_signals'])): ?>
+    <div class="business-page"><section class="business-card"><p class="eyebrow">Organisatiecontext</p><h2>Eigen signalen</h2><ul class="signal-list"><?php foreach ($result['organization_signals'] as $signal): ?><li><strong><?= e($signal['label'] ?: $signal['value']) ?></strong><?php if (!empty($signal['explanation'])): ?> — <?= e($signal['explanation']) ?><?php endif; ?></li><?php endforeach; ?></ul><p class="form-help">Deze signalen komen uit de instellingen van je organisatie en zijn geen zelfstandig fraudebewijs.</p></section></div>
+<?php endif; ?>

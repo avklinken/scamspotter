@@ -35,7 +35,8 @@ final class OrganizationCheckService
         }
 
         (new PlanService($this->db))->assertCheckAllowed($organizationId);
-        $result = $this->analysis->analyze($inputType, $analysisInput, $channel);
+        $organizationRules = (new OrganizationRuleService($this->db))->active($organizationId);
+        $result = $this->analysis->analyze($inputType, $analysisInput, $channel, $organizationRules);
         $top = is_array($result['top_match'] ?? null) ? $result['top_match'] : null;
         $retentionDays = $this->retentionDays($organizationId);
         $expiresAt = (new \DateTimeImmutable())->modify('+' . $retentionDays . ' days')->format('Y-m-d H:i:s');
@@ -44,6 +45,7 @@ final class OrganizationCheckService
             'status' => $result['status'],
             'top_match' => $result['top_match'],
             'matches' => $result['matches'],
+            'organization_signals' => $result['organization_signals'] ?? [],
             'ai_analysis' => $result['ai_analysis'],
         ];
 

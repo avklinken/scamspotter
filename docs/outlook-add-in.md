@@ -24,4 +24,4 @@ Een check slaat standaard geen volledige body op. Er worden een hash, redacted e
 - `POST /api/v1/business/report`
 - `POST /api/v1/business/feedback`
 
-De Outlook-pilot gebruikt de Business-sessie en CSRF-token. Server-to-server clients kunnen een organisatiegebonden Bearer-key gebruiken; de key wordt alleen als hash opgeslagen.
+De Outlook-pilot gebruikt de Business-sessie en CSRF-token. Server-to-server clients kunnen een organisatiegebonden Bearer-key gebruiken; de key wordt alleen als hash opgeslagen. Optionele organisatiecontext wordt tenantgebonden als aanvullend signaal meegestuurd.

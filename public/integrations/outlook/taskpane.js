@@ -59,6 +59,10 @@
         document.querySelector('[data-match-type]').textContent = `${match.variant?.type_name || ''} · ${match.variant?.family_name || ''}`;
         document.querySelector('[data-signals]').innerHTML = (match.indicators || []).slice(0, 5).map((item) => `<li>${escapeHtml(item.value || '')}</li>`).join('');
       } else box.hidden = true;
+      const organizationSignals = result.organization_signals || [];
+      const organizationBox = document.querySelector('[data-org-match]');
+      organizationBox.hidden = organizationSignals.length === 0;
+      document.querySelector('[data-org-signals]').innerHTML = organizationSignals.slice(0, 5).map((item) => `<li>${escapeHtml(item.label || item.value || '')}</li>`).join('');
       show('result');
     } catch (error) {
       document.querySelector('[data-result-note]').textContent = error.message;

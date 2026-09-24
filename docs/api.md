@@ -21,7 +21,7 @@ Content-Type: application/json
 }
 ```
 
-De response bevat een status, scamfamilie/type/variant waar herkenbaar, signalen, vervolgstap en aanbevolen actie. Interne matchscores zijn geen publieke kansberekening.
+De response bevat een status, scamfamilie/type/variant waar herkenbaar, signalen, organisatiecontext, vervolgstap en aanbevolen actie. Interne matchscores zijn geen publieke kansberekening.
 
 ## Business endpoints
 

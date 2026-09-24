@@ -9,6 +9,7 @@ use App\Repositories\ScamRepository;
 use App\Services\BusinessAuthService;
 use App\Services\BusinessApiKeyService;
 use App\Services\BusinessInvitationService;
+use App\Services\OrganizationRuleService;
 use App\Services\OpenAIService;
 use App\Services\OrganizationCheckService;
 use App\Services\PlanService;
@@ -99,6 +100,7 @@ final class BusinessController extends Controller
             'tenant' => $tenant->fetch() ?: null,
             'plan' => $plan,
             'members' => $this->members(),
+            'organizationRules' => (new OrganizationRuleService($this->db()))->list($this->organizationId()),
             'apiKeys' => (new BusinessApiKeyService($this->db()))->list($this->organizationId()),
         ]);
     }
@@ -178,6 +180,47 @@ final class BusinessController extends Controller
             flash('success', 'API-key aangemaakt. Bewaar de key nu; hij wordt niet opnieuw getoond.');
         } catch (\InvalidArgumentException $exception) {
             flash('error', $exception->getMessage());
+        }
+        Response::redirect(url('/business/settings'));
+    }
+
+    public function createOrganizationRule(Request $request): never
+    {
+        require_business_role('admin');
+        if (!$request->isPost() || !verify_csrf($request->post('_csrf'))) {
+            flash('error', 'Ongeldige sessie. Probeer opnieuw.');
+            Response::redirect(url('/business/settings'));
+        }
+        try {
+            $rule = (new OrganizationRuleService($this->db()))->create(
+                $this->organizationId(),
+                (string) $request->post('rule_type', ''),
+                (string) $request->post('value', ''),
+                (string) $request->post('label', ''),
+                (string) $request->post('explanation', ''),
+                $this->userId(),
+            );
+            $this->event('organization_rule_created', 'organization_rule', $rule['id']);
+            flash('success', 'Organisatiecontext opgeslagen.');
+        } catch (\InvalidArgumentException $exception) {
+            flash('error', $exception->getMessage());
+        }
+        Response::redirect(url('/business/settings'));
+    }
+
+    public function deleteOrganizationRule(Request $request): never
+    {
+        require_business_role('admin');
+        if (!$request->isPost() || !verify_csrf($request->post('_csrf'))) {
+            flash('error', 'Ongeldige sessie. Probeer opnieuw.');
+            Response::redirect(url('/business/settings'));
+        }
+        $ruleId = (int) $request->post('id', 0);
+        if ((new OrganizationRuleService($this->db()))->delete($this->organizationId(), $ruleId)) {
+            $this->event('organization_rule_deleted', 'organization_rule', $ruleId);
+            flash('success', 'Organisatiecontext verwijderd.');
+        } else {
+            flash('error', 'Organisatiecontext niet gevonden.');
         }
         Response::redirect(url('/business/settings'));
     }

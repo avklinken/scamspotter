@@ -33,6 +33,7 @@ Elke zakelijke query moet de organisatiecontext uit een geauthenticeerde sessie,
 - Geen message body in logs, analytics of publieke knowledge-base records.
 - AI-output is een voorstel en geen publicatiebeslissing.
 - Zakelijke checks, loginpogingen en feedback zijn rate-limited; de dagelijkse retention-job ruimt verlopen checks, runs en oude operationele data op.
+- Organisatiecontext is opt-in, tenantgebonden en alleen bedoeld als aanvullend signaal; een domein, merk of leverancier wordt nooit zelfstandig als fraudebewijs gepresenteerd.
 
 ## Pricing hypothesis
 

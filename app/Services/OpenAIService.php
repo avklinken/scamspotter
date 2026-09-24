@@ -107,9 +107,10 @@ final class OpenAIService
 
     /**
      * @param list<array<string, mixed>> $matches
+     * @param list<array<string, mixed>> $organizationSignals
      * @return array<string, mixed>|null
      */
-    public function analyzeCheck(string $inputType, string $input, array $matches): ?array
+    public function analyzeCheck(string $inputType, string $input, array $matches, array $organizationSignals = []): ?array
     {
         $this->lastUsage = [];
         if (!$this->enabled() || !function_exists('curl_init')) {
@@ -144,7 +145,7 @@ final class OpenAIService
                     'role' => 'user',
                     'content' => [[
                         'type' => 'input_text',
-                        'text' => json_text(['input_type' => $inputType, 'input' => $input, 'local_matches' => $matches]),
+                        'text' => json_text(['input_type' => $inputType, 'input' => $input, 'local_matches' => $matches, 'organization_signals' => $organizationSignals]),
                     ]],
                 ],
             ],
