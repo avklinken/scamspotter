@@ -70,6 +70,47 @@ final class BusinessController extends Controller
         $this->renderBusiness('business/reports', ['reports' => $this->recentReports($this->organizationId(), 100)]);
     }
 
+    public function exportReports(Request $request): never
+    {
+        require_business_role('analyst');
+        $statement = $this->db()->prepare("SELECT r.created_at, r.status, r.description, r.redacted_excerpt,
+                oc.input_type, oc.subject, oc.sender_domain, oc.status AS check_status,
+                bu.name AS reporter_name
+            FROM organization_reports r
+            LEFT JOIN organization_checks oc ON oc.id = r.check_id
+            LEFT JOIN business_users bu ON bu.id = r.user_id
+            WHERE r.organization_id = :organization_id
+            ORDER BY r.created_at DESC
+            LIMIT 5000");
+        $statement->execute(['organization_id' => $this->organizationId()]);
+
+        header('Content-Type: text/csv; charset=utf-8');
+        header('Content-Disposition: attachment; filename="scamspotter-business-reports-' . date('Y-m-d') . '.csv"');
+        header('Cache-Control: no-store, max-age=0');
+        header('X-Content-Type-Options: nosniff');
+        $output = fopen('php://output', 'wb');
+        if ($output === false) {
+            exit;
+        }
+        fputcsv($output, ['Datum', 'Status', 'Type', 'Onderwerp', 'Afzenderdomein', 'Checkstatus', 'Melder', 'Redacted excerpt', 'Toelichting']);
+        while ($report = $statement->fetch()) {
+            fputcsv($output, [
+                $this->csvCell((string) ($report['created_at'] ?? '')),
+                $this->csvCell((string) ($report['status'] ?? '')),
+                $this->csvCell((string) ($report['input_type'] ?? '')),
+                $this->csvCell((string) ($report['subject'] ?? '')),
+                $this->csvCell((string) ($report['sender_domain'] ?? '')),
+                $this->csvCell((string) ($report['check_status'] ?? '')),
+                $this->csvCell((string) ($report['reporter_name'] ?? '')),
+                $this->csvCell((string) ($report['redacted_excerpt'] ?? '')),
+                $this->csvCell((string) ($report['description'] ?? '')),
+            ]);
+        }
+        fclose($output);
+        $this->event('reports_exported', 'organization_reports', 0);
+        exit;
+    }
+
     public function reportAction(Request $request): never
     {
         require_business_role('analyst');
@@ -312,6 +353,11 @@ final class BusinessController extends Controller
     private function userId(): int
     {
         return (int) (business_user()['id'] ?? 0);
+    }
+
+    private function csvCell(string $value): string
+    {
+        return $value !== '' && in_array($value[0], ['=', '+', '-', '@'], true) ? "'" . $value : $value;
     }
 
     /** @return list<array<string, mixed>> */

@@ -73,6 +73,7 @@ $router->get('/business', [BusinessController::class, 'dashboard']);
 $router->get('/business/check', [BusinessController::class, 'checkForm']);
 $router->post('/business/check', [BusinessController::class, 'runCheck']);
 $router->get('/business/reports', [BusinessController::class, 'reports']);
+$router->get('/business/reports/export', [BusinessController::class, 'exportReports']);
 $router->post('/business/reports/action', [BusinessController::class, 'reportAction']);
 $router->get('/business/settings', [BusinessController::class, 'settings']);
 $router->post('/business/settings/invite', [BusinessController::class, 'createInvitation']);
