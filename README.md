@@ -122,6 +122,8 @@ php bin/create-business-org.php medewerker@example.com "Naam medewerker" "Voorbe
 
 Business-login: `/business/login`. De interne Outlook-add-in staat in `public/integrations/outlook/manifest.xml` en gebruikt `ReadItem`; automatische mailboxanalyse is niet ingeschakeld.
 
+De tabel `analysis_jobs` en `AnalysisJobService` leggen alvast een tenantgebonden queue-contract vast voor een latere Protect-worker. Er is nu geen Graph-webhook, mailboxscan of automatische jobproducer geactiveerd; `php bin/queue-status.php` is alleen een operationele statuscontrole.
+
 Een admin kan een eerste pilotorganisatie ook aanmaken via `/admin/business`. De webflow slaat alleen de gehashte owner-authenticatie op. Teamleden kunnen daarna vanuit **Organisatie** met een tijdelijke uitnodigingslink worden toegevoegd. API-keys zijn voor plannen met API-toegang beschikbaar in **Organisatie** of via de CLI.
 
 Maak alleen voor een vertrouwde machine-to-machine-client een API-key aan. De volledige key wordt één keer getoond:

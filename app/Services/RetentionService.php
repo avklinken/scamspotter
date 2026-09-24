@@ -22,6 +22,7 @@ final class RetentionService
         $deleted['business_events'] = $this->delete('DELETE FROM organization_events WHERE occurred_at < DATE_SUB(NOW(), INTERVAL 395 DAY)');
         $deleted['usage_events'] = $this->delete('DELETE FROM usage_events WHERE created_at < DATE_SUB(NOW(), INTERVAL 395 DAY)');
         $deleted['rate_limits'] = $this->delete('DELETE FROM business_rate_limits WHERE last_seen_at < UTC_TIMESTAMP() - INTERVAL 2 DAY');
+        $deleted['analysis_jobs'] = $this->delete("DELETE FROM analysis_jobs WHERE status IN ('completed', 'failed') AND finished_at < DATE_SUB(NOW(), INTERVAL 30 DAY)");
         return $deleted;
     }
 

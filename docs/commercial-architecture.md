@@ -44,3 +44,7 @@ De applicatie heeft hiervoor al een plan-/usage-laag (`account_subscriptions`, `
 Checks worden per organisatieplan begrensd op maandbasis; de rate limiter blijft daarnaast de operationele bescherming per uur. Een bereikt planlimiet blokkeert alleen nieuwe zakelijke analyses en heeft geen effect op de gratis publieke checker.
 
 De Business-pijplijn gebruikt standaard eerst lokale indicatoren en vraagt alleen bij onzekere uitkomsten aanvullende AI (`BUSINESS_AI_CHECK_MODE=uncertain`). Daarmee blijft een Outlook-pilot voorspelbaar in kosten; `AI_CHECK_MODE` voor de publieke checker blijft hiervan losgekoppeld.
+
+## Voorbereiding op Protect
+
+`AnalysisJobService` beheert een tenantgebonden queue-contract met claim-, retry- en cleanupgedrag. De queue is in deze versie inert: er is geen Microsoft Graph-subscription, automatische mailboxscan of jobproducer actief. Een toekomstige Protect-worker mag pas worden geactiveerd na Entra-consent, privacy-instellingen, policy-validatie en een aparte cost guard.
