@@ -9,6 +9,7 @@ use App\Repositories\ScamRepository;
 use App\Services\BusinessAuthService;
 use App\Services\OpenAIService;
 use App\Services\OrganizationCheckService;
+use App\Services\PlanService;
 use App\Services\ScamAnalysisOrchestrator;
 use App\Services\ScamAnalysisService;
 use App\Services\SeoService;
@@ -23,6 +24,8 @@ final class BusinessController extends Controller
             'metrics' => $this->metrics($organizationId),
             'recentReports' => $this->recentReports($organizationId, 6),
             'topTypes' => $this->topTypes($organizationId),
+            'plan' => (new PlanService($this->db()))->forOrganization($organizationId),
+            'planUsage' => (new PlanService($this->db()))->usage($organizationId),
         ]);
     }
 

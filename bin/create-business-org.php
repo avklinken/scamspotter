@@ -41,6 +41,12 @@ try {
         VALUES (:organization_id, :user_id, 'owner', 'active')
         ON DUPLICATE KEY UPDATE role = 'owner', status = 'active'");
     $membership->execute(['organization_id' => $organizationId, 'user_id' => $userId]);
+    $subscriptionExists = $db->prepare("SELECT id FROM account_subscriptions WHERE account_id = :account_id AND status IN ('trialing', 'active') ORDER BY id DESC LIMIT 1");
+    $subscriptionExists->execute(['account_id' => $accountId]);
+    if ($subscriptionExists->fetchColumn() === false) {
+        $subscription = $db->prepare("INSERT INTO account_subscriptions (account_id, plan_code, status) VALUES (:account_id, 'business_trial', 'trialing')");
+        $subscription->execute(['account_id' => $accountId]);
+    }
     $db->commit();
     echo "Business-organisatie en owner aangemaakt of bijgewerkt.\n";
 } catch (Throwable $exception) {
