@@ -10,9 +10,21 @@ declare(strict_types=1);
             <div class="hero-actions"><a class="button button-orange" data-analytics-event="scam_check_started" href="<?= e(url('/check')) ?>">⌕ &nbsp;Iets verdachts checken</a><a class="button button-ghost" href="<?= e(url('/waarschuwingen')) ?>">Bekijk actuele scams</a></div>
             <p class="hero-note">Je gegevens worden niet standaard opgeslagen.</p>
         </div>
-        <div class="hero-visual" aria-label="Voorbeeld van een scamcheck">
+        <div class="hero-visual" aria-label="Voorbeeld van ScamSpotter op een smartphone">
             <div class="hero-signal"><small>Link check</small><strong>https://verdacht-example.com</strong><div class="signal-line"><span>Waarschijnlijk fraude</span><span>›</span></div></div>
-            <div class="mock-phone"><div class="mock-notch"></div><small>Bericht ontvangen</small><strong>Uw pakket kan niet worden bezorgd.</strong><div class="mock-message">Betaal €1,99 om opnieuw te plannen:<br><b>post-nl-track.com</b><span class="risk-pill">▲ Smishing</span></div></div>
+            <div class="mock-phone" role="img" aria-label="Mobiele ScamSpotter-check met waarschuwing voor smishing">
+                <div class="phone-side-button phone-side-button-top"></div><div class="phone-side-button phone-side-button-bottom"></div>
+                <div class="mock-screen">
+                    <div class="mock-statusbar"><span>8:41</span><span>● ● ▰</span></div>
+                    <div class="mock-appbar"><img src="<?= e(asset('icons/logo.svg')) ?>" alt="" width="128" height="24"><span aria-hidden="true">☰</span></div>
+                    <div class="mock-screen-copy"><small>SCAMSPOTTER CHECK</small><strong>Iets verdachts<br>ontvangen?</strong><p>Plak een bericht, upload een screenshot of voer een link in.</p></div>
+                    <div class="mock-input">Plak hier de tekst of link…</div>
+                    <div class="mock-input-actions"><span>▧</span><span>↗</span><span>⌕</span><span>✉</span></div>
+                    <div class="mock-cta">Controleren →</div>
+                    <p class="mock-footnote">Je gegevens worden niet opgeslagen.</p>
+                    <div class="mock-alert"><small>ACTUELE WAARSCHUWING</small><strong>Valse sms over pakket</strong><span>Actief · Smishing</span></div>
+                </div>
+            </div>
         </div>
     </div>
 </section>
