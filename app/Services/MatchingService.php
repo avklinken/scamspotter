@@ -45,7 +45,7 @@ final class MatchingService
             'top_match' => $top,
             'matches' => array_slice($matches, 0, 5),
             'has_match' => $top !== null,
-            'input_excerpt' => $this->excerpt($input),
+            'input_excerpt' => $analysis['input_excerpt'] ?? mb_substr($input, 0, 160),
             'ai_analysis' => $analysis['ai_analysis'] ?? null,
             'usage' => $analysis['usage'] ?? [],
         ];
