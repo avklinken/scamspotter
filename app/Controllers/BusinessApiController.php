@@ -9,6 +9,7 @@ use App\Repositories\ScamRepository;
 use App\Services\BusinessAuthService;
 use App\Services\OpenAIService;
 use App\Services\OrganizationCheckService;
+use App\Services\PlanService;
 use App\Services\PlanLimitException;
 use App\Services\RateLimitService;
 use App\Services\ScamAnalysisOrchestrator;
@@ -25,6 +26,7 @@ final class BusinessApiController extends Controller
     public function check(Request $request): never
     {
         [$organizationId, $userId, $sessionAuth] = $this->authenticate($request);
+        $this->assertApiAccess($organizationId, $sessionAuth);
         $this->limit($request, $organizationId, $userId, 'check');
         $data = $request->json();
         $data['channel'] = $data['channel'] ?? 'outlook_addin';
@@ -47,6 +49,7 @@ final class BusinessApiController extends Controller
     public function analyse(Request $request): never
     {
         [$organizationId, $userId, $sessionAuth] = $this->authenticate($request);
+        $this->assertApiAccess($organizationId, $sessionAuth);
         $this->limit($request, $organizationId, $userId, 'check');
         if ($sessionAuth && !hash_equals(csrf_token(), (string) ($request->header('X-CSRF-Token', '') ?? ''))) {
             Response::json(['error' => 'csrf_failed'], 419);
@@ -67,7 +70,8 @@ final class BusinessApiController extends Controller
 
     public function usage(Request $request): never
     {
-        [$organizationId] = $this->authenticate($request);
+        [$organizationId, , $sessionAuth] = $this->authenticate($request);
+        $this->assertApiAccess($organizationId, $sessionAuth);
         $statement = $this->db()->prepare("SELECT COUNT(*) AS runs, COALESCE(SUM(input_tokens), 0) AS input_tokens,
                 COALESCE(SUM(output_tokens), 0) AS output_tokens
             FROM usage_events WHERE organization_id = :organization_id AND created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY)");
@@ -80,7 +84,8 @@ final class BusinessApiController extends Controller
         if ($request->bearerToken() === null) {
             Response::json(['error' => 'api_key_required'], 401);
         }
-        [$organizationId, $userId] = $this->authenticate($request);
+        [$organizationId, $userId, $sessionAuth] = $this->authenticate($request);
+        $this->assertApiAccess($organizationId, $sessionAuth);
         $this->limit($request, $organizationId, $userId, 'intelligence');
         $since = (string) $request->query('since', '');
         try {
@@ -143,6 +148,7 @@ final class BusinessApiController extends Controller
     public function report(Request $request): never
     {
         [$organizationId, $userId, $sessionAuth] = $this->authenticate($request);
+        $this->assertApiAccess($organizationId, $sessionAuth);
         $this->limit($request, $organizationId, $userId, 'report');
         if ($sessionAuth && !hash_equals(csrf_token(), (string) ($request->header('X-CSRF-Token', '') ?? ''))) {
             Response::json(['error' => 'csrf_failed'], 419);
@@ -159,6 +165,7 @@ final class BusinessApiController extends Controller
     public function feedback(Request $request): never
     {
         [$organizationId, $userId, $sessionAuth] = $this->authenticate($request);
+        $this->assertApiAccess($organizationId, $sessionAuth);
         $this->limit($request, $organizationId, $userId, 'feedback');
         if ($sessionAuth && !hash_equals(csrf_token(), (string) ($request->header('X-CSRF-Token', '') ?? ''))) {
             Response::json(['error' => 'csrf_failed'], 419);
@@ -219,6 +226,13 @@ final class BusinessApiController extends Controller
         if (!(new RateLimitService($this->db()))->allow($key, $limit, $window)) {
             header('Retry-After: 3600');
             Response::json(['error' => 'rate_limited'], 429);
+        }
+    }
+
+    private function assertApiAccess(int $organizationId, bool $sessionAuth): void
+    {
+        if (!$sessionAuth && !(new PlanService($this->db()))->allowsApi($organizationId)) {
+            Response::json(['error' => 'api_not_included'], 403);
         }
     }
 

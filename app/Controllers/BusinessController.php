@@ -7,6 +7,7 @@ use App\Http\Request;
 use App\Http\Response;
 use App\Repositories\ScamRepository;
 use App\Services\BusinessAuthService;
+use App\Services\BusinessApiKeyService;
 use App\Services\OpenAIService;
 use App\Services\OrganizationCheckService;
 use App\Services\PlanService;
@@ -90,7 +91,53 @@ final class BusinessController extends Controller
         $organization = $statement->fetch();
         $tenant = $this->db()->prepare('SELECT * FROM microsoft_tenants WHERE organization_id = :organization_id ORDER BY id DESC LIMIT 1');
         $tenant->execute(['organization_id' => $this->organizationId()]);
-        $this->renderBusiness('business/settings', ['organization' => $organization, 'tenant' => $tenant->fetch() ?: null]);
+        $plan = (new PlanService($this->db()))->forOrganization($this->organizationId());
+        $this->renderBusiness('business/settings', [
+            'organization' => $organization,
+            'tenant' => $tenant->fetch() ?: null,
+            'plan' => $plan,
+            'apiKeys' => (new BusinessApiKeyService($this->db()))->list($this->organizationId()),
+        ]);
+    }
+
+    public function createApiKey(Request $request): never
+    {
+        require_business_role('admin');
+        if (!$request->isPost() || !verify_csrf($request->post('_csrf'))) {
+            flash('error', 'Ongeldige sessie. Probeer opnieuw.');
+            Response::redirect(url('/business/settings'));
+        }
+        $plan = (new PlanService($this->db()))->forOrganization($this->organizationId());
+        if (!(bool) ($plan['plan']['api'] ?? false)) {
+            flash('error', 'API-toegang is vanaf Business Team beschikbaar.');
+            Response::redirect(url('/business/settings'));
+        }
+        try {
+            $created = (new BusinessApiKeyService($this->db()))->create($this->organizationId(), (string) $request->post('name', ''));
+            $this->event('api_key_created', 'business_api_key', $created['id']);
+            flash('api_key', $created['token']);
+            flash('success', 'API-key aangemaakt. Bewaar de key nu; hij wordt niet opnieuw getoond.');
+        } catch (\InvalidArgumentException $exception) {
+            flash('error', $exception->getMessage());
+        }
+        Response::redirect(url('/business/settings'));
+    }
+
+    public function revokeApiKey(Request $request): never
+    {
+        require_business_role('admin');
+        if (!$request->isPost() || !verify_csrf($request->post('_csrf'))) {
+            flash('error', 'Ongeldige sessie. Probeer opnieuw.');
+            Response::redirect(url('/business/settings'));
+        }
+        $keyId = (int) $request->post('id', 0);
+        if ((new BusinessApiKeyService($this->db()))->revoke($this->organizationId(), $keyId)) {
+            $this->event('api_key_revoked', 'business_api_key', $keyId);
+            flash('success', 'API-key ingetrokken.');
+        } else {
+            flash('error', 'API-key niet gevonden of al ingetrokken.');
+        }
+        Response::redirect(url('/business/settings'));
     }
 
     private function checkService(): OrganizationCheckService
@@ -147,6 +194,19 @@ final class BusinessController extends Controller
     private function userId(): int
     {
         return (int) (business_user()['id'] ?? 0);
+    }
+
+    private function event(string $type, string $entityType, int $entityId): void
+    {
+        $statement = $this->db()->prepare('INSERT INTO organization_events (organization_id, user_id, event_type, entity_type, entity_id)
+            VALUES (:organization_id, :user_id, :event_type, :entity_type, :entity_id)');
+        $statement->execute([
+            'organization_id' => $this->organizationId(),
+            'user_id' => $this->userId() ?: null,
+            'event_type' => $type,
+            'entity_type' => $entityType,
+            'entity_id' => $entityId,
+        ]);
     }
 
     /** @param array<string, mixed> $data */

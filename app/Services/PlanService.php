@@ -63,6 +63,12 @@ final class PlanService
         }
     }
 
+    public function allowsApi(int $organizationId): bool
+    {
+        $planData = $this->forOrganization($organizationId);
+        return (bool) ($planData['plan']['api'] ?? false);
+    }
+
     /** @return array<string, int> */
     public function usage(int $organizationId): array
     {

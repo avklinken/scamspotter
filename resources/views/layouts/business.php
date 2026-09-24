@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 $seo ??= ['title' => 'ScamSpotter Business', 'robots' => 'noindex,nofollow'];
 $success = flash('success');
+$error = flash('error');
+$apiKey = flash('api_key');
 ?>
 <!doctype html>
 <html lang="nl">
@@ -34,6 +36,8 @@ $success = flash('success');
             <?php if (business_user() !== null): ?><form method="post" action="<?= e(url('/business/logout')) ?>"><?= csrf_field() ?><button class="link-button" type="submit">Uitloggen</button></form><?php endif; ?>
         </header>
         <?php if ($success !== null): ?><div class="flash flash-success" role="status"><?= e($success) ?></div><?php endif; ?>
+        <?php if ($error !== null): ?><div class="flash flash-error" role="alert"><?= e($error) ?></div><?php endif; ?>
+        <?php if ($apiKey !== null): ?><div class="flash flash-key" role="status"><strong>Nieuwe API-key — kopieer deze nu:</strong><code><?= e($apiKey) ?></code><span>Om veiligheidsredenen wordt deze key niet opnieuw getoond.</span></div><?php endif; ?>
         <?= $content ?>
     </section>
 </div>

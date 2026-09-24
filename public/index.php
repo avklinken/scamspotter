@@ -73,6 +73,8 @@ $router->post('/business/check', [BusinessController::class, 'runCheck']);
 $router->get('/business/reports', [BusinessController::class, 'reports']);
 $router->post('/business/reports/action', [BusinessController::class, 'reportAction']);
 $router->get('/business/settings', [BusinessController::class, 'settings']);
+$router->post('/business/settings/api-key', [BusinessController::class, 'createApiKey']);
+$router->post('/business/settings/api-key/revoke', [BusinessController::class, 'revokeApiKey']);
 
 $router->post('/api/v1/business/login', [BusinessAuthController::class, 'apiLogin']);
 $router->post('/api/v1/business/logout', [BusinessAuthController::class, 'apiLogout']);

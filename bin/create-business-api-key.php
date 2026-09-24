@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 use App\Database;
+use App\Services\PlanService;
 
 require dirname(__DIR__) . '/app/bootstrap.php';
 
@@ -17,6 +18,10 @@ $organization->execute(['slug' => $slug]);
 $organizationId = (int) $organization->fetchColumn();
 if ($organizationId < 1) {
     fwrite(STDERR, "Organisatie niet gevonden.\n");
+    exit(1);
+}
+if (!(new PlanService($db))->allowsApi($organizationId)) {
+    fwrite(STDERR, "API-toegang is niet opgenomen in het huidige plan.\n");
     exit(1);
 }
 $token = 'ss_live_' . bin2hex(random_bytes(24));
