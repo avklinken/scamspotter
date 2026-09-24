@@ -19,6 +19,7 @@ $success = flash('success');
         <a class="admin-brand" href="<?= e(url('/admin')) ?>"><img src="<?= e(asset('icons/logo-light.svg')) ?>" alt="ScamSpotter.nl" width="180" height="35"></a>
         <nav aria-label="Beheernavigatie">
             <a href="<?= e(url('/admin')) ?>">Dashboard</a>
+            <a href="<?= e(url('/admin/business')) ?>">Business</a>
             <a href="<?= e(url('/admin/scams')) ?>">Scams</a>
             <a href="<?= e(url('/admin/alerts')) ?>">Waarschuwingen</a>
             <a href="<?= e(url('/admin/sources')) ?>">Bronnen</a>

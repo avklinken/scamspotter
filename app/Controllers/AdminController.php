@@ -31,6 +31,27 @@ final class AdminController extends Controller
         ]);
     }
 
+    public function business(Request $request): void
+    {
+        require_admin();
+        $organizations = $this->db()->query("SELECT o.id, o.name, o.slug, o.status, o.retention_days,
+                ca.billing_email,
+                COALESCE(sub.plan_code, 'business_trial') AS plan_code,
+                COALESCE(sub.status, 'trialing') AS subscription_status,
+                COUNT(DISTINCT om.user_id) AS members,
+                COUNT(DISTINCT CASE WHEN oc.created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY) THEN oc.id END) AS checks_30d,
+                COUNT(DISTINCT CASE WHEN r.status IN ('new', 'review') THEN r.id END) AS open_reports
+            FROM organizations o
+            INNER JOIN commercial_accounts ca ON ca.id = o.account_id
+            LEFT JOIN account_subscriptions sub ON sub.account_id = ca.id AND sub.status IN ('trialing', 'active')
+            LEFT JOIN organization_memberships om ON om.organization_id = o.id AND om.status = 'active'
+            LEFT JOIN organization_checks oc ON oc.organization_id = o.id
+            LEFT JOIN organization_reports r ON r.organization_id = o.id
+            GROUP BY o.id, o.name, o.slug, o.status, o.retention_days, ca.billing_email, sub.plan_code, sub.status
+            ORDER BY o.created_at DESC")->fetchAll();
+        $this->renderAdmin('admin/business', ['organizations' => $organizations]);
+    }
+
     public function scams(Request $request): void
     {
         require_admin();
