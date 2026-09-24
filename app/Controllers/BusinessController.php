@@ -299,6 +299,8 @@ final class BusinessController extends Controller
             'suspicious' => "SELECT COUNT(*) FROM organization_checks WHERE organization_id = :id AND status IN ('strong_match', 'suspicious_signals') AND created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY)",
             'open_reports' => "SELECT COUNT(*) FROM organization_reports WHERE organization_id = :id AND status IN ('new', 'review')",
             'members' => "SELECT COUNT(*) FROM organization_memberships WHERE organization_id = :id AND status = 'active'",
+            'feedback_useful' => "SELECT COUNT(*) FROM organization_check_feedback WHERE organization_id = :id AND feedback = 'useful' AND created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY)",
+            'feedback_not_useful' => "SELECT COUNT(*) FROM organization_check_feedback WHERE organization_id = :id AND feedback = 'not_useful' AND created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY)",
         ] as $key => $sql) {
             $statement = $this->db()->prepare($sql);
             $statement->execute(['id' => $organizationId]);

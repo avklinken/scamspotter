@@ -36,6 +36,7 @@ Meet minimaal:
 - nuttige matches, foutpositieven en feedback;
 - tijd tussen check en melding-opvolging;
 - checks met lokale match versus aanvullende AI-analyse;
+- nuttige versus niet-nuttige uitleg;
 - OpenAI-verbruik en totale kosten per organisatie.
 
 De pilot is geslaagd wanneer medewerkers de uitleg begrijpen, beheerders er opvolging aan kunnen koppelen en de gebruikskosten voorspelbaar blijven. ScamSpotter vervangt geen Defender of bestaande mailbeveiliging.
