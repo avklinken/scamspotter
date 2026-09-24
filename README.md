@@ -62,6 +62,8 @@ De inhoudshiërarchie is: **scamfamilie → scamtype → scamvariant → actuele
 
    Controleer daarna de productieomgeving met `php bin/healthcheck.php`.
 
+   `ADMIN_PASSWORD` is alleen bootstrap-configuratie voor dit CLI-commando; de web-login gebruikt de gehashte waarde in `admin_users`. Verwijder het daarna uit `.env`.
+
 7. Start lokaal met de ingebouwde server:
 
    ```bash
