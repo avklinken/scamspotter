@@ -146,6 +146,25 @@ final class BusinessController extends Controller
         ]);
     }
 
+    public function updateRetention(Request $request): never
+    {
+        require_business_role('admin');
+        if (!$request->isPost() || !verify_csrf($request->post('_csrf'))) {
+            flash('error', 'Ongeldige sessie. Probeer opnieuw.');
+            Response::redirect(url('/business/settings'));
+        }
+        $days = (int) $request->post('retention_days', 0);
+        if ($days < 1 || $days > 365) {
+            flash('error', 'Kies een bewaartermijn tussen 1 en 365 dagen.');
+            Response::redirect(url('/business/settings'));
+        }
+        $statement = $this->db()->prepare('UPDATE organizations SET retention_days = :retention_days WHERE id = :id');
+        $statement->execute(['retention_days' => $days, 'id' => $this->organizationId()]);
+        $this->event('retention_days_updated', 'organization', $this->organizationId());
+        flash('success', 'Bewaartermijn bijgewerkt. Dit geldt voor nieuwe zakelijke checks.');
+        Response::redirect(url('/business/settings'));
+    }
+
     public function createInvitation(Request $request): never
     {
         require_business_role('admin');

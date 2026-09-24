@@ -8,6 +8,7 @@
 4. Nodig vanuit **Organisatie** teamleden uit; deel de tijdelijke link alleen met de bedoelde medewerker.
 5. Noteer de organisatie, pilotperiode en afgesproken bewaartermijn; deel geen checker-inhoud via losse e-mail.
 6. Pauzeer of sluit een pilot na afloop via **Admin → Business**; beide statussen blokkeren nieuwe Business-logins zonder organisatiegegevens direct te verwijderen.
+7. Stel vanuit **Organisatie** de bewaartermijn van nieuwe zakelijke checks in op de afgesproken periode (1–365 dagen).
 
 ## 2. Outlook installeren
 

@@ -76,6 +76,7 @@ $router->get('/business/reports', [BusinessController::class, 'reports']);
 $router->get('/business/reports/export', [BusinessController::class, 'exportReports']);
 $router->post('/business/reports/action', [BusinessController::class, 'reportAction']);
 $router->get('/business/settings', [BusinessController::class, 'settings']);
+$router->post('/business/settings/retention', [BusinessController::class, 'updateRetention']);
 $router->post('/business/settings/invite', [BusinessController::class, 'createInvitation']);
 $router->post('/business/settings/rule', [BusinessController::class, 'createOrganizationRule']);
 $router->post('/business/settings/rule/delete', [BusinessController::class, 'deleteOrganizationRule']);
