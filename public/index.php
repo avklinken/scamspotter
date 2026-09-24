@@ -20,9 +20,15 @@ header('X-Content-Type-Options: nosniff');
 header('X-Frame-Options: SAMEORIGIN');
 header('Referrer-Policy: strict-origin-when-cross-origin');
 header('Permissions-Policy: camera=(), microphone=(), geolocation=()');
+if (is_https() && (string) env('APP_ENV', 'local') === 'production' && env('HSTS_ENABLED', 'false') === 'true') {
+    header('Strict-Transport-Security: max-age=31536000; includeSubDomains');
+}
 
 $router = new Router();
 $request = new Request();
+if (str_starts_with($request->path(), '/admin') || str_starts_with($request->path(), '/business') || str_starts_with($request->path(), '/api/')) {
+    header('Cache-Control: no-store, max-age=0');
+}
 $redirect = $app['db']->prepare('SELECT new_path, status_code FROM redirects WHERE old_path = :old_path AND active = 1 LIMIT 1');
 $redirect->execute(['old_path' => $request->path()]);
 if ($target = $redirect->fetch()) {
@@ -70,6 +76,7 @@ $router->post('/api/v1/analyse', [BusinessApiController::class, 'analyse']);
 $router->post('/api/v1/business/report', [BusinessApiController::class, 'report']);
 $router->post('/api/v1/business/feedback', [BusinessApiController::class, 'feedback']);
 $router->get('/api/v1/business/usage', [BusinessApiController::class, 'usage']);
+$router->get('/api/v1/intelligence/feed', [BusinessApiController::class, 'intelligence']);
 
 $router->get('/admin/login', [AuthController::class, 'loginForm']);
 $router->post('/admin/login', [AuthController::class, 'login']);

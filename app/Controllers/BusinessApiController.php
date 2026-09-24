@@ -68,6 +68,71 @@ final class BusinessApiController extends Controller
         Response::json(['ok' => true, 'period' => '30d', 'usage' => $statement->fetch() ?: ['runs' => 0, 'input_tokens' => 0, 'output_tokens' => 0]]);
     }
 
+    public function intelligence(Request $request): never
+    {
+        if ($request->bearerToken() === null) {
+            Response::json(['error' => 'api_key_required'], 401);
+        }
+        [$organizationId, $userId] = $this->authenticate($request);
+        $this->limit($request, $organizationId, $userId, 'intelligence');
+        $since = (string) $request->query('since', '');
+        try {
+            $sinceDate = $since !== '' ? (new \DateTimeImmutable($since))->format('Y-m-d H:i:s') : (new \DateTimeImmutable('-30 days'))->format('Y-m-d H:i:s');
+        } catch (\Throwable) {
+            Response::json(['error' => 'invalid_since'], 422);
+        }
+        $limit = max(1, min(100, (int) $request->query('limit', '50')));
+        $statement = $this->db()->prepare("SELECT a.id, a.title, a.slug, a.summary, a.event_date, a.published_at,
+                v.id AS variant_id, v.name AS variant_name, v.slug AS variant_slug,
+                t.name AS type_name, t.slug AS type_slug, f.name AS family_name, f.slug AS family_slug,
+                s.organization AS source_organization, s.homepage AS source_homepage
+            FROM scam_alerts a
+            LEFT JOIN scam_variants v ON v.id = a.variant_id
+            LEFT JOIN scam_types t ON t.id = v.type_id
+            LEFT JOIN scam_families f ON f.id = t.family_id
+            LEFT JOIN sources s ON s.id = a.source_id
+            WHERE a.status = 'published' AND COALESCE(a.published_at, a.created_at) >= :since
+            ORDER BY COALESCE(a.published_at, a.created_at) DESC LIMIT {$limit}");
+        $statement->execute(['since' => $sinceDate]);
+        $alerts = $statement->fetchAll();
+        $variantIds = array_values(array_filter(array_map(static fn (array $row): int => (int) ($row['variant_id'] ?? 0), $alerts)));
+        $indicators = [];
+        if ($variantIds !== []) {
+            $placeholders = implode(',', array_fill(0, count($variantIds), '?'));
+            $indicatorQuery = $this->db()->prepare("SELECT vi.variant_id, i.indicator_type, i.value, i.normalized_value, i.explanation, COALESCE(vi.weight_override, i.weight) AS weight
+                FROM scam_variant_indicators vi INNER JOIN scam_indicators i ON i.id = vi.indicator_id
+                WHERE vi.variant_id IN ({$placeholders}) AND i.status = 'active' ORDER BY weight DESC");
+            $indicatorQuery->execute($variantIds);
+            foreach ($indicatorQuery->fetchAll() as $indicator) {
+                $indicators[(int) $indicator['variant_id']][] = [
+                    'type' => $indicator['indicator_type'],
+                    'value' => $indicator['value'],
+                    'normalized_value' => $indicator['normalized_value'],
+                    'explanation' => $indicator['explanation'],
+                    'weight' => (float) $indicator['weight'],
+                ];
+            }
+        }
+        $items = array_map(static function (array $alert) use ($indicators): array {
+            $variantId = (int) ($alert['variant_id'] ?? 0);
+            return [
+                'id' => (int) $alert['id'],
+                'title' => $alert['title'],
+                'slug' => $alert['slug'],
+                'summary' => $alert['summary'],
+                'event_date' => $alert['event_date'],
+                'published_at' => $alert['published_at'],
+                'url' => url('/waarschuwingen/' . $alert['slug']),
+                'family' => ['name' => $alert['family_name'], 'slug' => $alert['family_slug']],
+                'type' => ['name' => $alert['type_name'], 'slug' => $alert['type_slug']],
+                'variant' => ['id' => $variantId, 'name' => $alert['variant_name'], 'slug' => $alert['variant_slug']],
+                'indicators' => array_slice($indicators[$variantId] ?? [], 0, 30),
+                'source' => ['organization' => $alert['source_organization'], 'homepage' => $alert['source_homepage']],
+            ];
+        }, $alerts);
+        Response::json(['ok' => true, 'since' => $sinceDate, 'items' => $items]);
+    }
+
     public function report(Request $request): never
     {
         [$organizationId, $userId, $sessionAuth] = $this->authenticate($request);
@@ -133,9 +198,10 @@ final class BusinessApiController extends Controller
         $limit = match ($scope) {
             'feedback' => 60,
             'report' => 60,
+            'intelligence' => 1000,
             default => max(10, (int) env('BUSINESS_CHECKS_PER_HOUR', '120')),
         };
-        $window = $scope === 'feedback' ? 3600 : 3600;
+        $window = $scope === 'intelligence' ? 86400 : 3600;
         $key = 'business:' . $scope . ':' . $organizationId . ':' . $identity;
         if (!(new RateLimitService($this->db()))->allow($key, $limit, $window)) {
             header('Retry-After: 3600');
