@@ -1,0 +1,5 @@
+<?php
+declare(strict_types=1);
+?>
+<section class="page-header"><div class="container"><p class="eyebrow">Contact</p><h1>Een correctie, vraag of samenwerking?</h1><p>Gebruik het formulier om een verdachte situatie te melden. Voor redactionele vragen kun je een korte toelichting meesturen.</p></div></section>
+<section class="section"><div class="container content-layout"><article class="prose"><h2>Voor inhoudelijke correcties</h2><p>Vermeld de URL van de pagina en wat volgens jou niet klopt. Onderbouw een correctie waar mogelijk met een bron.</p><h2>Voor privacyvragen</h2><p>Gebruik geen checker-input of gevoelige persoonsgegevens in een algemene vraag. Zie eerst onze <a href="<?= e(url('/privacy')) ?>">privacyuitleg</a>.</p><h2>Een scam melden</h2><p><a class="button button-orange" href="<?= e(url('/melden')) ?>">Naar het meldformulier</a></p></article><aside class="sidebar-card"><h3>Bronnen en werkwijze</h3><a href="<?= e(url('/bronnen')) ?>">Onze bronnen</a><a href="<?= e(url('/over-scamspotter/werkwijze')) ?>">Onze werkwijze</a></aside></div></section>

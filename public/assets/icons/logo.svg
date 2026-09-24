@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 390 74" role="img" aria-labelledby="title desc">
+  <title id="title">ScamSpotter.nl</title>
+  <desc id="desc">ScamSpotter.nl logo met vergrootglas en schild</desc>
+  <g fill="none" stroke="#0F2D4A" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="34" cy="31" r="22" fill="#fff"/>
+    <path d="m50 48 13 13"/>
+  </g>
+  <path d="M34 15 45 20v10c0 9-6 15-11 18-5-3-11-9-11-18V20l11-5Z" fill="#FF6B00"/>
+  <text x="76" y="48" font-family="Inter,Arial,sans-serif" font-size="43" font-weight="800" letter-spacing="-2"><tspan fill="#0F2D4A">Scam</tspan><tspan fill="#FF6B00">Spotter</tspan><tspan fill="#0F2D4A">.nl</tspan></text>
+</svg>

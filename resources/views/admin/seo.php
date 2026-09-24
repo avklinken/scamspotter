@@ -1,0 +1,4 @@
+<?php
+declare(strict_types=1);
+?>
+<div class="admin-page"><div class="admin-page-header"><div><p class="eyebrow">Publiceerkwaliteit</p><h1>SEO-controles</h1><p>Praktische redactionele checks, geen arbitraire SEO-score.</p></div><a class="button button-ghost" href="<?= e(url('/sitemap.xml')) ?>" target="_blank" rel="noopener">Open sitemap</a></div><section class="admin-card"><table class="admin-table"><thead><tr><th>Controle</th><th>Resultaat</th><th>Actie</th></tr></thead><tbody><?php foreach ($checks as $check): ?><tr><td><strong><?= e($check['label']) ?></strong></td><td><span class="tag <?= (int) $check['value'] === 0 ? 'tag-green' : 'tag-danger' ?>"><?= e((string) $check['value']) ?></span></td><td><?= (int) $check['value'] === 0 ? 'In orde' : 'Redactionele aandacht nodig' ?></td></tr><?php endforeach; ?></tbody></table></section></div>

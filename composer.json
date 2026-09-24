@@ -1,0 +1,13 @@
+{
+  "name": "scamspotter/scamspotter",
+  "description": "ScamSpotter.nl — Nederlandse consumentenveiligheid en scamchecker",
+  "type": "project",
+  "require": {
+    "php": ">=8.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "app/"
+    }
+  }
+}

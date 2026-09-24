@@ -1,0 +1,4 @@
+<?php
+declare(strict_types=1);
+?>
+<section class="login-card"><a class="brand" href="<?= e(url('/')) ?>"><img src="<?= e(asset('icons/logo.svg')) ?>" alt="ScamSpotter.nl" width="195" height="37"></a><p class="eyebrow">Beveiligd beheer</p><h1>Inloggen</h1><p>Beheer kennis, waarschuwingen en redactionele review-items.</p><?php if (!empty($error)): ?><div class="form-error" role="alert"><?= e($error) ?></div><?php endif; ?><form method="post" action="<?= e(url('/admin/login')) ?>"><?= csrf_field() ?><div class="form-field"><label class="form-label" for="email">E-mailadres</label><input class="form-control" id="email" type="email" name="email" autocomplete="username" required></div><div class="form-field"><label class="form-label" for="password">Wachtwoord</label><input class="form-control" id="password" type="password" name="password" autocomplete="current-password" required></div><button class="button button-orange" type="submit">Inloggen</button></form></section>

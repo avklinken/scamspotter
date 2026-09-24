@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#0F2D4A"/>
+  <circle cx="1020" cy="110" r="280" fill="#173d60"/>
+  <g transform="translate(86 92)"><circle cx="48" cy="46" r="34" fill="none" stroke="#fff" stroke-width="12"/><path d="m74 72 28 28" stroke="#fff" stroke-width="12" stroke-linecap="round"/><path d="M48 20 66 28v17c0 14-10 26-18 30-8-4-18-16-18-30V28l18-8Z" fill="#FF6B00"/></g>
+  <text x="86" y="280" fill="#fff" font-family="Arial,sans-serif" font-size="74" font-weight="700">Scam<tspan fill="#FF6B00">Spotter</tspan><tspan fill="#fff">.nl</tspan></text>
+  <text x="91" y="355" fill="#d9e7f4" font-family="Arial,sans-serif" font-size="32" letter-spacing="7">HERKEN DE TRUC. BLIJF ÉÉN STAP VOOR.</text>
+  <rect x="91" y="435" width="110" height="8" rx="4" fill="#FF6B00"/>
+</svg>
