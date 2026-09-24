@@ -16,7 +16,8 @@ final class ScamAnalysisOrchestrator
     {
         $local = $this->local->analyze($inputType, $input);
         $ai = null;
-        $mode = (string) env('AI_CHECK_MODE', 'all');
+        $businessChannel = in_array($channel, ['outlook_addin', 'business_web', 'api', 'protect'], true);
+        $mode = (string) env($businessChannel ? 'BUSINESS_AI_CHECK_MODE' : 'AI_CHECK_MODE', $businessChannel ? 'uncertain' : 'all');
         $needsAi = $mode === 'all' || ($mode === 'uncertain' && $local['status']['code'] !== 'strong_match');
         if ($needsAi) {
             $ai = $this->ai->analyzeCheck($inputType, $input, $local['matches']);

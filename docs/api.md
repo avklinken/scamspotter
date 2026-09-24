@@ -32,3 +32,5 @@ De response bevat een status, scamfamilie/type/variant waar herkenbaar, signalen
 - `GET /api/v1/intelligence/feed` — gepubliceerde actuele waarschuwingen en gekoppelde indicatoren voor API-clients (`since` en `limit` zijn optioneel).
 
 API-checks zijn begrensd via `BUSINESS_CHECKS_PER_HOUR` (standaard 120 per gebruiker of API-client). De API retourneert geen volledige opgeslagen mailbody. Gebruik TLS, roteer keys en bewaar keys alleen in een secret manager of serveromgeving.
+
+Daarnaast bewaakt ScamSpotter de maandlimiet van het organisatieplan. Bij overschrijding retourneert een analyse `429 plan_limit_reached` met de gebruikte en resterende eenheden.

@@ -37,12 +37,44 @@ final class PlanService
         return $row + ['plan_code' => $planCode, 'plan' => $plan];
     }
 
+    /** @return array{allowed: bool, used: int, limit: int, remaining: int, plan_code: string} */
+    public function allowance(int $organizationId): array
+    {
+        $planData = $this->forOrganization($organizationId);
+        $statement = $this->db->prepare("SELECT COUNT(*) FROM organization_analysis_runs
+            WHERE organization_id = :organization_id AND created_at >= DATE_FORMAT(CURRENT_DATE, '%Y-%m-01')");
+        $statement->execute(['organization_id' => $organizationId]);
+        $used = (int) $statement->fetchColumn();
+        $limit = max(0, (int) ($planData['plan']['checks_month'] ?? 0));
+        return [
+            'allowed' => $limit === 0 || $used < $limit,
+            'used' => $used,
+            'limit' => $limit,
+            'remaining' => $limit === 0 ? 0 : max(0, $limit - $used),
+            'plan_code' => (string) ($planData['plan_code'] ?? 'business_trial'),
+        ];
+    }
+
+    public function assertCheckAllowed(int $organizationId): void
+    {
+        $allowance = $this->allowance($organizationId);
+        if (!$allowance['allowed']) {
+            throw new PlanLimitException($allowance);
+        }
+    }
+
     /** @return array<string, int> */
     public function usage(int $organizationId): array
     {
+        $allowance = $this->allowance($organizationId);
         $statement = $this->db->prepare("SELECT COUNT(*) FROM organization_analysis_runs
             WHERE organization_id = :organization_id AND created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY)");
         $statement->execute(['organization_id' => $organizationId]);
-        return ['checks_30d' => (int) $statement->fetchColumn()];
+        return [
+            'checks_30d' => (int) $statement->fetchColumn(),
+            'checks_month' => $allowance['used'],
+            'limit' => $allowance['limit'],
+            'remaining' => $allowance['remaining'],
+        ];
     }
 }

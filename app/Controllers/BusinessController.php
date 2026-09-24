@@ -10,6 +10,7 @@ use App\Services\BusinessAuthService;
 use App\Services\OpenAIService;
 use App\Services\OrganizationCheckService;
 use App\Services\PlanService;
+use App\Services\PlanLimitException;
 use App\Services\ScamAnalysisOrchestrator;
 use App\Services\ScamAnalysisService;
 use App\Services\SeoService;
@@ -52,6 +53,8 @@ final class BusinessController extends Controller
                 'body' => $request->post('body', ''),
             ]);
             $this->renderBusiness('business/check-result', ['result' => $result, 'checkId' => (int) $result['check_id']]);
+        } catch (PlanLimitException $exception) {
+            $this->renderBusiness('business/check', ['result' => null, 'errors' => [$exception->getMessage()]], 429);
         } catch (\InvalidArgumentException $exception) {
             $this->renderBusiness('business/check', ['result' => null, 'errors' => [$exception->getMessage()]], 422);
         }

@@ -101,11 +101,14 @@ OPENAI_API_KEY=
 OPENAI_MODEL=gpt-4o-mini
 OPENAI_TIMEOUT=30
 AI_CHECK_MODE=all
+BUSINESS_AI_CHECK_MODE=uncertain
 ```
 
 De integratie gebruikt de Responses API met Structured Outputs en `store=false`. De API-key komt nooit in de browser. Output wordt server-side gevalideerd en opgeslagen als voorstel; publicatie gebeurt niet automatisch.
 
 Zonder API-key blijven de lokale indicator-matching, checker-resultaten en cron-review-architectuur werken.
+
+Zakelijke checks gebruiken standaard `BUSINESS_AI_CHECK_MODE=uncertain`: een sterke lokale match vraagt niet nogmaals een AI-analyse. Zet dit alleen op `all` als extra uitleg zwaarder weegt dan lagere API-kosten.
 
 ## ScamSpotter Business
 

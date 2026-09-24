@@ -9,6 +9,7 @@ use App\Repositories\ScamRepository;
 use App\Services\BusinessAuthService;
 use App\Services\OpenAIService;
 use App\Services\OrganizationCheckService;
+use App\Services\PlanLimitException;
 use App\Services\RateLimitService;
 use App\Services\ScamAnalysisOrchestrator;
 use App\Services\ScamAnalysisService;
@@ -33,6 +34,8 @@ final class BusinessApiController extends Controller
         try {
             $result = $this->service()->run($organizationId, $userId, $data);
             Response::json(['ok' => true, 'result' => $this->publicResult($result)]);
+        } catch (PlanLimitException $exception) {
+            Response::json(['error' => 'plan_limit_reached', 'message' => $exception->getMessage(), 'usage' => $exception->usage()], 429);
         } catch (\InvalidArgumentException $exception) {
             Response::json(['error' => $exception->getMessage()], 422);
         } catch (\Throwable $exception) {
@@ -55,6 +58,8 @@ final class BusinessApiController extends Controller
         try {
             $result = $this->service()->run($organizationId, $userId, $data);
             Response::json(['ok' => true, 'result' => $this->publicResult($result)]);
+        } catch (PlanLimitException $exception) {
+            Response::json(['error' => 'plan_limit_reached', 'message' => $exception->getMessage(), 'usage' => $exception->usage()], 429);
         } catch (\InvalidArgumentException $exception) {
             Response::json(['error' => $exception->getMessage()], 422);
         }

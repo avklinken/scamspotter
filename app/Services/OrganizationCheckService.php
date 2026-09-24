@@ -34,6 +34,7 @@ final class OrganizationCheckService
             throw new \InvalidArgumentException('Voer minimaal een onderwerp, afzender of bericht in.');
         }
 
+        (new PlanService($this->db))->assertCheckAllowed($organizationId);
         $result = $this->analysis->analyze($inputType, $analysisInput, $channel);
         $top = is_array($result['top_match'] ?? null) ? $result['top_match'] : null;
         $retentionDays = $this->retentionDays($organizationId);
