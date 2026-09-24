@@ -26,6 +26,7 @@ final class BusinessApiController extends Controller
         [$organizationId, $userId, $sessionAuth] = $this->authenticate($request);
         $this->limit($request, $organizationId, $userId, 'check');
         $data = $request->json();
+        $data['channel'] = $data['channel'] ?? 'outlook_addin';
         if ($sessionAuth && !hash_equals(csrf_token(), (string) ($request->header('X-CSRF-Token', '') ?? ''))) {
             Response::json(['error' => 'csrf_failed'], 419);
         }
@@ -48,6 +49,7 @@ final class BusinessApiController extends Controller
             Response::json(['error' => 'csrf_failed'], 419);
         }
         $data = $request->json();
+        $data['channel'] = 'api';
         $data['input_type'] = $data['input_type'] ?? $data['content_type'] ?? 'message';
         $data['body'] = $data['body'] ?? $data['content'] ?? $data['input'] ?? '';
         try {

@@ -43,6 +43,7 @@ final class BusinessController extends Controller
         try {
             $result = $this->checkService()->run($this->organizationId(), $this->userId(), [
                 'input_type' => $request->post('input_type', 'email'),
+                'channel' => 'business_web',
                 'subject' => $request->post('subject', ''),
                 'sender_email' => $request->post('sender_email', ''),
                 'body' => $request->post('body', ''),

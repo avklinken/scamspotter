@@ -20,6 +20,10 @@ final class OrganizationCheckService
         if (!in_array($inputType, ['email', 'message', 'url', 'phone'], true)) {
             throw new \InvalidArgumentException('Dit type zakelijke controle wordt nog niet ondersteund.');
         }
+        $channel = trim((string) ($data['channel'] ?? 'outlook_addin'));
+        if (!in_array($channel, ['outlook_addin', 'business_web', 'api', 'protect'], true)) {
+            $channel = 'business_web';
+        }
         $subject = trim((string) ($data['subject'] ?? ''));
         $sender = trim((string) ($data['sender_email'] ?? ''));
         $body = trim((string) ($data['body'] ?? ''));
@@ -30,7 +34,7 @@ final class OrganizationCheckService
             throw new \InvalidArgumentException('Voer minimaal een onderwerp, afzender of bericht in.');
         }
 
-        $result = $this->analysis->analyze($inputType, $analysisInput, 'business');
+        $result = $this->analysis->analyze($inputType, $analysisInput, $channel);
         $top = is_array($result['top_match'] ?? null) ? $result['top_match'] : null;
         $retentionDays = $this->retentionDays($organizationId);
         $expiresAt = (new \DateTimeImmutable())->modify('+' . $retentionDays . ' days')->format('Y-m-d H:i:s');
@@ -47,11 +51,12 @@ final class OrganizationCheckService
             $run = $this->db->prepare("INSERT INTO organization_analysis_runs
                 (organization_id, user_id, channel, input_type, input_hash, status, family_id, type_id, variant_id,
                  result_json, model, prompt_version, input_tokens, output_tokens, retention_until)
-                VALUES (:organization_id, :user_id, 'outlook_addin', :input_type, :input_hash, :status, :family_id, :type_id,
+                VALUES (:organization_id, :user_id, :channel, :input_type, :input_hash, :status, :family_id, :type_id,
                  :variant_id, :result_json, :model, 'checker-v1', :input_tokens, :output_tokens, :retention_until)");
             $run->execute([
                 'organization_id' => $organizationId,
                 'user_id' => $userId,
+                'channel' => $channel,
                 'input_type' => $inputType,
                 'input_hash' => $hash,
                 'status' => (string) ($result['status']['code'] ?? 'insufficient_information'),
