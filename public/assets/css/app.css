@@ -272,6 +272,7 @@ p { margin: 0 0 16px; }
 .business-metric { padding: 19px; border: 1px solid var(--line); border-radius: 12px; background: #fff; }
 .business-metric span { display: block; color: var(--muted); font-size: .72rem; font-weight: 800; }
 .business-metric strong { display: block; margin-top: 9px; color: var(--navy); font-size: 1.8rem; line-height: 1; }
+.business-metric small { display: block; margin-top: 7px; color: var(--muted); font-size: .7rem; }
 .business-grid-two, .business-result-grid { display: grid; grid-template-columns: 1.25fr .75fr; gap: 18px; }
 .business-card { padding: 24px; border: 1px solid var(--line); border-radius: 13px; background: #fff; box-shadow: 0 10px 30px rgba(15,45,74,.045); }
 .business-card h2 { margin-top: 0; font-size: 1.3rem; }
@@ -286,6 +287,12 @@ p { margin: 0 0 16px; }
 .business-list-row span { display: block; color: var(--muted); font-size: .78rem; }
 .business-empty { padding: 25px 0; color: var(--muted); }
 .business-note { margin-top: 20px; padding: 13px 15px; border-left: 3px solid var(--orange); background: #fff8f2; color: var(--muted); font-size: .82rem; }
+.business-usage-card { margin-bottom: 22px; }
+.business-usage-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.business-usage-grid div { padding: 16px; border-radius: 10px; background: var(--mist-2); }
+.business-usage-grid strong, .business-usage-grid span { display: block; }
+.business-usage-grid strong { color: var(--navy); font-size: 1.5rem; }
+.business-usage-grid span { margin-top: 5px; color: var(--muted); font-size: .78rem; }
 .business-check-card { max-width: 900px; }
 .business-result-grid .business-card:first-child { min-width: 0; }
 .business-table-wrap { overflow-x: auto; }
@@ -385,4 +392,5 @@ p { margin: 0 0 16px; }
     .business-login-card { padding: 25px; }
     .business-definition-list div { display: block; }
     .business-definition-list dd { margin-top: 5px; text-align: left; }
+    .business-usage-grid { grid-template-columns: 1fr; }
 }

@@ -29,6 +29,7 @@ final class BusinessController extends Controller
             'topTypes' => $this->topTypes($organizationId),
             'plan' => (new PlanService($this->db()))->forOrganization($organizationId),
             'planUsage' => (new PlanService($this->db()))->usage($organizationId),
+            'aiUsage' => $this->aiUsage($organizationId),
         ]);
     }
 
@@ -242,6 +243,22 @@ final class BusinessController extends Controller
             GROUP BY type_name HAVING type_name IS NOT NULL ORDER BY total DESC LIMIT 5");
         $statement->execute(['organization_id' => $organizationId]);
         return $statement->fetchAll();
+    }
+
+    /** @return array{runs: int, input_tokens: int, output_tokens: int} */
+    private function aiUsage(int $organizationId): array
+    {
+        $statement = $this->db()->prepare('SELECT COUNT(*) AS runs,
+                COALESCE(SUM(input_tokens), 0) AS input_tokens,
+                COALESCE(SUM(output_tokens), 0) AS output_tokens
+            FROM usage_events WHERE organization_id = :organization_id AND created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY)');
+        $statement->execute(['organization_id' => $organizationId]);
+        $usage = $statement->fetch() ?: [];
+        return [
+            'runs' => (int) ($usage['runs'] ?? 0),
+            'input_tokens' => (int) ($usage['input_tokens'] ?? 0),
+            'output_tokens' => (int) ($usage['output_tokens'] ?? 0),
+        ];
     }
 
     private function organizationId(): int

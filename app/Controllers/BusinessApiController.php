@@ -76,7 +76,12 @@ final class BusinessApiController extends Controller
                 COALESCE(SUM(output_tokens), 0) AS output_tokens
             FROM usage_events WHERE organization_id = :organization_id AND created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY)");
         $statement->execute(['organization_id' => $organizationId]);
-        Response::json(['ok' => true, 'period' => '30d', 'usage' => $statement->fetch() ?: ['runs' => 0, 'input_tokens' => 0, 'output_tokens' => 0]]);
+        Response::json([
+            'ok' => true,
+            'period' => '30d',
+            'usage' => $statement->fetch() ?: ['runs' => 0, 'input_tokens' => 0, 'output_tokens' => 0],
+            'plan' => (new PlanService($this->db()))->usage($organizationId),
+        ]);
     }
 
     public function intelligence(Request $request): never
