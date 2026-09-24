@@ -164,10 +164,20 @@ final class PublicController extends Controller
         ]);
     }
 
+    public function business(Request $request): void
+    {
+        $this->render('public/business', [
+            'seo' => $this->seo([
+                'title' => 'ScamSpotter voor organisaties — ScamSpotter.nl',
+                'description' => 'Help medewerkers verdachte zakelijke communicatie herkennen, begrijpen en melden met ScamSpotter Business.',
+            ]),
+        ]);
+    }
+
     public function sitemap(Request $request): void
     {
         header('Content-Type: application/xml; charset=UTF-8');
-        $urls = [url('/'), url('/oplichting/'), url('/waarschuwingen/'), url('/melden/'), url('/bronnen/')];
+        $urls = [url('/'), url('/oplichting/'), url('/waarschuwingen/'), url('/melden/'), url('/bronnen/'), url('/voor-organisaties')];
         foreach ($this->scams->types() as $type) {
             $urls[] = url('/oplichting/' . $type['slug']);
         }

@@ -50,6 +50,7 @@ $router->get('/zoeken', [PublicController::class, 'search']);
 $router->get('/bronnen', [PublicController::class, 'sources']);
 $router->get('/over-scamspotter', static fn (Request $request): mixed => (new PublicController($app))->staticPage($request, 'over-scamspotter'));
 $router->get('/over-scamspotter/werkwijze', [PublicController::class, 'methodology']);
+$router->get('/voor-organisaties', [PublicController::class, 'business']);
 $router->get('/privacy', static fn (Request $request): mixed => (new PublicController($app))->staticPage($request, 'privacy'));
 $router->get('/cookies', static fn (Request $request): mixed => (new PublicController($app))->staticPage($request, 'cookies'));
 $router->get('/contact', static fn (Request $request): mixed => (new PublicController($app))->staticPage($request, 'contact'));

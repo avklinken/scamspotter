@@ -14,6 +14,6 @@ declare(strict_types=1);
             <div class="form-field"><label class="form-label" for="business-password">Wachtwoord</label><input class="form-control" id="business-password" name="password" type="password" autocomplete="current-password" required></div>
             <button class="button button-orange" type="submit">Inloggen</button>
         </form>
-        <p class="form-help" style="margin-top:20px"><a href="<?= e(url('/')) ?>">Naar ScamSpotter.nl voor consumenten</a></p>
+        <p class="form-help" style="margin-top:20px"><a href="<?= e(url('/voor-organisaties')) ?>">Meer over ScamSpotter Business</a> · <a href="<?= e(url('/')) ?>">Naar ScamSpotter.nl voor consumenten</a></p>
     </div>
 </main>

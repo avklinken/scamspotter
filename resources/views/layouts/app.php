@@ -63,7 +63,7 @@ $success = flash('success');
             <p class="footer-muted">Een veiliger internet begint bij bewustwording.</p>
         </div>
         <div><h2>Ontdek</h2><a href="<?= e(url('/oplichting')) ?>">Oplichtingstrucs</a><a href="<?= e(url('/waarschuwingen')) ?>">Actuele waarschuwingen</a><a href="<?= e(url('/check')) ?>">Scam checken</a><a href="<?= e(url('/melden')) ?>">Melden</a></div>
-        <div><h2>Over ons</h2><a href="<?= e(url('/bronnen')) ?>">Bronnen</a><a href="<?= e(url('/over-scamspotter/werkwijze')) ?>">Werkwijze</a><a href="<?= e(url('/business/login')) ?>">Voor organisaties</a><a href="<?= e(url('/contact')) ?>">Contact</a></div>
+        <div><h2>Over ons</h2><a href="<?= e(url('/bronnen')) ?>">Bronnen</a><a href="<?= e(url('/over-scamspotter/werkwijze')) ?>">Werkwijze</a><a href="<?= e(url('/voor-organisaties')) ?>">Voor organisaties</a><a href="<?= e(url('/contact')) ?>">Contact</a></div>
         <div><h2>Informatie</h2><a href="<?= e(url('/privacy')) ?>">Privacy</a><a href="<?= e(url('/cookies')) ?>">Cookies</a><a href="<?= e(url('/over-scamspotter')) ?>">Disclaimer</a></div>
     </div>
     <div class="container footer-bottom"><span>© <?= date('Y') ?> ScamSpotter.nl</span><span>Informatie, geen vervanging voor aangifte of persoonlijk advies.</span></div>
