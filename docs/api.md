@@ -34,3 +34,5 @@ De response bevat een status, scamfamilie/type/variant waar herkenbaar, signalen
 API-checks zijn begrensd via `BUSINESS_CHECKS_PER_HOUR` (standaard 120 per gebruiker of API-client). De API retourneert geen volledige opgeslagen mailbody. Gebruik TLS, roteer keys en bewaar keys alleen in een secret manager of serveromgeving.
 
 Daarnaast bewaakt ScamSpotter de maandlimiet van het organisatieplan. Bij overschrijding retourneert een analyse `429 plan_limit_reached` met de gebruikte en resterende eenheden.
+
+Een organisatiebeheerder kan API-keys voor plannen met API-toegang aanmaken en intrekken via `/business/settings`. De volledige key wordt alleen direct na aanmaken getoond.

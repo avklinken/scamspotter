@@ -5,7 +5,8 @@
 - **Free:** publieke checker, kennisbank, waarschuwingen en vrijwillige meldingen.
 - **Business:** handmatige Outlook-checks, expliciete employee reports, organisatie-dashboard en tenantgebonden trends.
 - **Protect:** toekomstige multi-stage automatische mailanalyse; niet actief in deze versie.
-- **API/Intelligence Feed/MSP:** toekomstige kanalen bovenop dezelfde analyse-engine.
+- **API/Intelligence Feed:** beperkte v1 aanwezig voor vertrouwde Business-clients; distributie, billing en quota-uitbreiding volgen later.
+- **MSP:** toekomstig kanaal bovenop dezelfde tenant- en analyse-engine.
 
 ## Analysepad
 
