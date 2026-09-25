@@ -145,7 +145,7 @@ p { margin: 0 0 16px; }
 .alert-card { display: flex; flex-direction: column; min-height: 230px; }
 .alert-card .card-pad:last-child { margin-top: auto; padding-top: 0; }
 .alert-meta { display: flex; flex-wrap: wrap; gap: 9px; align-items: center; color: var(--muted); font-size: .75rem; }
-.tag { display: inline-flex; align-items: center; width: max-content; padding: 5px 9px; border-radius: 999px; background: var(--mist-2); color: var(--navy); font-size: .7rem; font-weight: 800; }
+.tag { display: inline-flex; align-items: center; max-width: 100%; width: max-content; padding: 5px 9px; border-radius: 999px; background: var(--mist-2); color: var(--navy); font-size: .7rem; font-weight: 800; overflow-wrap: anywhere; text-align: center; white-space: normal; }
 .tag-danger { background: #fff0f0; color: var(--red); }
 .tag-green { background: #e8f7ed; color: #117038; }
 .cta-band { padding: 50px; border-radius: var(--radius); background: var(--navy); color: #fff; }
