@@ -30,7 +30,7 @@ try {
     $jobId = (int) $db->lastInsertId();
     $sources = $db->query("SELECT * FROM sources WHERE active = 1 AND trust_status = 'verified' ORDER BY id")->fetchAll();
     $repository = new ScamRepository($db);
-    $analysis = new ScamAnalysisService($repository);
+    $analysisService = new ScamAnalysisService($repository);
     $ai = new OpenAIService();
     foreach ($sources as $source) {
         $stats['sources']++;
@@ -58,27 +58,27 @@ try {
                     'url' => $item['url'],
                     'title' => mb_substr($item['title'], 0, 255),
                     'raw_content' => $item['content'],
-                    'normalized_content' => $analysis->normalize($content),
+                    'normalized_content' => $analysisService->normalize($content),
                     'content_hash' => $hash,
                     'published_at' => $item['published_at'],
                 ]);
                 $sourceItemId = (int) $db->lastInsertId();
                 $stats['items']++;
                 $candidates = $repository->matchCandidates($content);
-                $analysis = $ai->classify(['title' => $item['title'], 'content' => $item['content'], 'url' => $item['url']], $candidates);
-                if ($analysis !== null) {
+                $classification = $ai->classify(['title' => $item['title'], 'content' => $item['content'], 'url' => $item['url']], $candidates);
+                if ($classification !== null) {
                     $analysisInsert = $db->prepare("INSERT INTO ai_analyses (source_item_id, model, prompt_version, input_hash, classification, output_json, status)
                         VALUES (:source_item_id, :model, 'v1', :input_hash, :classification, :output_json, 'suggestion')");
                     $analysisInsert->execute([
                         'source_item_id' => $sourceItemId,
                         'model' => (string) env('OPENAI_MODEL', 'gpt-4o-mini'),
                         'input_hash' => $hash,
-                        'classification' => $analysis['classification'],
-                        'output_json' => json_text($analysis),
+                        'classification' => $classification['classification'],
+                        'output_json' => json_text($classification),
                     ]);
                     $analysisId = (int) $db->lastInsertId();
                     $review = $db->prepare("INSERT INTO review_queue (source_item_id, ai_analysis_id, item_type, priority, status, suggested_action) VALUES (:source_item_id, :ai_id, 'source_item', :priority, 'pending', :suggested_action)");
-                    $review->execute(['source_item_id' => $sourceItemId, 'ai_id' => $analysisId, 'priority' => $analysis['classification'] === 'irrelevant' ? 1 : 5, 'suggested_action' => (string) ($analysis['recommended_editorial_action'] ?? 'Beoordeel bronitem')]);
+                    $review->execute(['source_item_id' => $sourceItemId, 'ai_id' => $analysisId, 'priority' => $classification['classification'] === 'irrelevant' ? 1 : 5, 'suggested_action' => (string) ($classification['recommended_editorial_action'] ?? 'Beoordeel bronitem')]);
                     $stats['reviews']++;
                 } else {
                     $review = $db->prepare("INSERT INTO review_queue (source_item_id, item_type, priority, status, suggested_action) VALUES (:source_item_id, 'source_item', 3, 'pending', 'Beoordeel nieuw bronitem')");
