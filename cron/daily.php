@@ -5,6 +5,7 @@ use App\Database;
 use App\Repositories\ScamRepository;
 use App\Services\OpenAIService;
 use App\Services\RetentionService;
+use App\Services\ScamAnalysisService;
 
 if (PHP_SAPI !== 'cli') {
     http_response_code(404);
@@ -29,6 +30,7 @@ try {
     $jobId = (int) $db->lastInsertId();
     $sources = $db->query("SELECT * FROM sources WHERE active = 1 AND trust_status = 'verified' ORDER BY id")->fetchAll();
     $repository = new ScamRepository($db);
+    $analysis = new ScamAnalysisService($repository);
     $ai = new OpenAIService();
     foreach ($sources as $source) {
         $stats['sources']++;
@@ -56,7 +58,7 @@ try {
                     'url' => $item['url'],
                     'title' => mb_substr($item['title'], 0, 255),
                     'raw_content' => $item['content'],
-                    'normalized_content' => $repository->normalize($content),
+                    'normalized_content' => $analysis->normalize($content),
                     'content_hash' => $hash,
                     'published_at' => $item['published_at'],
                 ]);
