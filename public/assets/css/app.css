@@ -335,6 +335,32 @@ p { margin: 0 0 16px; }
 .business-login-card { width: min(470px, 100%); padding: 38px; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; box-shadow: var(--shadow); }
 .business-login-card > img { display: block; margin-bottom: 29px; }
 .business-login-card h1 { font-size: 2.2rem; }
+.business-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
+.business-step { min-height: 245px; padding: 24px; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; box-shadow: 0 8px 24px rgba(15,45,74,.04); }
+.business-step-number { display: grid; place-items: center; width: 42px; height: 42px; margin-bottom: 28px; border-radius: 50%; background: #fff3e9; color: var(--orange-dark); font-size: .75rem; font-weight: 900; }
+.business-step h3 { font-size: 1.15rem; }
+.business-step p:last-child { margin-bottom: 0; color: var(--muted); font-size: .88rem; }
+.business-onboarding-grid { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(280px, .85fr); gap: 24px; align-items: start; }
+.business-install-card, .business-onboarding-aside { padding: 30px; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; box-shadow: var(--shadow); }
+.business-install-card h2 { margin-bottom: 12px; font-size: clamp(1.7rem, 3vw, 2.25rem); }
+.business-install-card > p:not(.eyebrow), .business-info-block p:not(.eyebrow) { color: #52677f; }
+.business-manifest-url { margin: 20px 0 24px; padding: 13px 15px; overflow-wrap: anywhere; border-radius: 9px; background: var(--navy-deep); color: #dceaf5; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: .76rem; }
+.business-install-list { display: grid; gap: 17px; margin: 0 0 22px; padding: 0; list-style: none; counter-reset: install-step; }
+.business-install-list li { display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 12px; align-items: start; color: #52677f; font-size: .87rem; }
+.business-install-list li::before { display: grid; place-items: center; width: 29px; height: 29px; border-radius: 50%; background: var(--mist-2); color: var(--navy); content: counter(install-step); counter-increment: install-step; font-size: .72rem; font-weight: 900; }
+.business-install-list strong { display: block; margin-bottom: 3px; color: var(--navy); font-size: .9rem; }
+.business-install-list a, .business-install-card .form-help a { color: var(--orange-dark); font-weight: 800; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 2px; }
+.business-onboarding-aside { display: grid; gap: 0; padding: 0; overflow: hidden; }
+.business-info-block { padding: 25px 26px; }
+.business-info-block + .business-info-block { border-top: 1px solid var(--line); }
+.business-info-block h3 { font-size: 1.22rem; }
+.business-info-block p:last-child { margin-bottom: 0; }
+.business-check-list { display: grid; gap: 13px; margin: 17px 0 0; padding: 0; list-style: none; }
+.business-check-list li { display: grid; gap: 2px; padding-left: 22px; position: relative; }
+.business-check-list li::before { position: absolute; top: 2px; left: 0; color: var(--orange); content: "✓"; font-weight: 900; }
+.business-check-list strong { color: var(--navy); font-size: .86rem; }
+.business-check-list span { color: var(--muted); font-size: .82rem; }
+.business-info-block .card-link { margin-top: 12px; }
 @media (max-width: 1020px) {
     .site-nav { gap: 13px; font-size: .8rem; }
     .hero-grid { gap: 28px; }
@@ -344,7 +370,8 @@ p { margin: 0 0 16px; }
     .footer-grid { grid-template-columns: 1.3fr repeat(3, 1fr); gap: 20px; }
     .metric-grid { grid-template-columns: repeat(2, 1fr); }
     .business-metric-grid { grid-template-columns: repeat(3, 1fr); }
-    .business-grid-two, .business-result-grid { grid-template-columns: 1fr; }
+    .business-grid-two, .business-result-grid, .business-onboarding-grid { grid-template-columns: 1fr; }
+    .business-steps { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 780px) {
     .container { width: min(calc(100% - 30px), var(--max)); }
@@ -395,6 +422,9 @@ p { margin: 0 0 16px; }
     .business-page { padding: 25px 18px; }
     .business-page-header { display: block; }
     .business-page-header .button { margin-top: 16px; }
+    .business-steps { grid-template-columns: 1fr; }
+    .business-install-card, .business-onboarding-aside { padding: 22px; }
+    .business-onboarding-aside { padding: 0; }
 }
 @media (max-width: 500px) {
     h1 { font-size: 2.45rem; }

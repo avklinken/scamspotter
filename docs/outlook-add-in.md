@@ -5,8 +5,11 @@
 1. Host `public/integrations/outlook/taskpane.html` en `taskpane.js` op HTTPS.
 2. Configureer de publieke ScamSpotter-URL in `manifest.xml` wanneer de omgeving anders is.
 3. Maak een Business-organisatie via `/admin/business` of met `bin/create-business-org.php`.
-4. Sideload het manifest voor ontwikkeling of deploy het via Microsoft 365 Admin Center → Integrated apps.
-5. Test in Outlook on the web en New Outlook voordat de add-in breed wordt uitgerold.
+4. Download `/integrations/outlook/manifest.xml`; dit XML-bestand is de registratiebeschrijving voor Outlook, niet een uitvoerbaar programma.
+5. Test handmatig via Outlook → **My add-ins** → **Add a custom add-in** → **Add from File**, of deploy centraal via Microsoft 365 admin center → **Settings → Integrated apps → Deploy Add-in**.
+6. Test in Outlook on the web en New Outlook met een klein testpubliek voordat je de add-in breed uitrolt.
+
+Microsoft-handleidingen: [sideloaden voor tests](https://learn.microsoft.com/en-us/office/dev/add-ins/outlook/sideload-outlook-add-ins-for-testing) en [centrale deployment](https://learn.microsoft.com/en-us/microsoft-365/admin/manage/manage-deployment-of-add-ins?view=o365-worldwide).
 
 ## Rechten
 
