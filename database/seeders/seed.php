@@ -11,21 +11,22 @@ $db->beginTransaction();
 try {
     $sourceIds = [];
     $sources = [
-        ['Fraudehelpdesk', 'fraudehelpdesk', 'https://www.fraudehelpdesk.nl/', 'website', 'rss', 'Nederlandse meldingen en waarschuwingen over fraude.'],
-        ['Politie', 'politie', 'https://www.politie.nl/onderwerpen/fraude.html', 'website', 'manual', 'Officiële informatie en aangifte-informatie.'],
-        ['NCSC', 'ncsc', 'https://www.ncsc.nl/actueel', 'website', 'rss', 'Informatie van het Nationaal Cyber Security Centrum.'],
-        ['Opgelicht?!', 'opgelicht', 'https://opgelicht.avrotros.nl/', 'website', 'manual', 'Journalistieke signalering van oplichting en fraude.'],
-        ['Booking.com Security', 'booking-security', 'https://partner.booking.com/en-us/help/legal-security/security', 'advisory', 'manual', 'Officiële beveiligingsinformatie voor reserveringen.'],
+        ['Fraudehelpdesk', 'fraudehelpdesk', 'https://www.fraudehelpdesk.nl/', 'https://www.fraudehelpdesk.nl/feed/?post_type=alert', 'rss', 'rss', 'Nederlandse meldingen en waarschuwingen over fraude.'],
+        ['Politie', 'politie', 'https://www.politie.nl/onderwerpen/fraude.html', '', 'website', 'manual', 'Officiële informatie en aangifte-informatie.'],
+        ['NCSC', 'ncsc', 'https://www.ncsc.nl/actueel', '', 'website', 'rss', 'Informatie van het Nationaal Cyber Security Centrum.'],
+        ['Opgelicht?!', 'opgelicht', 'https://opgelicht.avrotros.nl/', '', 'website', 'manual', 'Journalistieke signalering van oplichting en fraude.'],
+        ['Booking.com Security', 'booking-security', 'https://partner.booking.com/en-us/help/legal-security/security', '', 'advisory', 'manual', 'Officiële beveiligingsinformatie voor reserveringen.'],
     ];
-    $sourceStatement = $db->prepare("INSERT INTO sources (organization, title, slug, homepage, source_type, trust_status, active, crawl_method, notes)
-        VALUES (:organization, :title, :slug, :homepage, :source_type, 'verified', 1, :crawl_method, :notes)
-        ON DUPLICATE KEY UPDATE organization = VALUES(organization), homepage = VALUES(homepage), notes = VALUES(notes), trust_status = 'verified', active = 1");
-    foreach ($sources as [$organization, $slug, $homepage, $sourceType, $crawlMethod, $notes]) {
+    $sourceStatement = $db->prepare("INSERT INTO sources (organization, title, slug, homepage, feed_url, source_type, trust_status, active, crawl_method, notes)
+        VALUES (:organization, :title, :slug, :homepage, :feed_url, :source_type, 'verified', 1, :crawl_method, :notes)
+        ON DUPLICATE KEY UPDATE organization = VALUES(organization), homepage = VALUES(homepage), feed_url = COALESCE(VALUES(feed_url), feed_url), notes = VALUES(notes), trust_status = 'verified', active = 1");
+    foreach ($sources as [$organization, $slug, $homepage, $feedUrl, $sourceType, $crawlMethod, $notes]) {
         $sourceStatement->execute([
             'organization' => $organization,
             'title' => $organization,
             'slug' => $slug,
             'homepage' => $homepage,
+            'feed_url' => $feedUrl !== '' ? $feedUrl : null,
             'source_type' => $sourceType,
             'crawl_method' => $crawlMethod,
             'notes' => $notes,
