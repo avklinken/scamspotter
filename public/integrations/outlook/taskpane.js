@@ -49,6 +49,7 @@
   const checkSpinner = document.querySelector('[data-check-spinner]');
   const setChecking = (checking) => {
     checkButton.disabled = checking;
+    checkButton.classList.toggle('is-loading', checking);
     checkButton.setAttribute('aria-busy', checking ? 'true' : 'false');
     document.querySelector('[data-check-label]').hidden = checking;
     document.querySelector('[data-check-loading]').hidden = !checking;

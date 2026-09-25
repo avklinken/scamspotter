@@ -95,11 +95,19 @@ body.outlook-pane {
     margin-top: 4px;
 }
 
-.outlook-pane .outlook-check-button:disabled {
+.outlook-pane .outlook-check-button:disabled,
+.outlook-pane .outlook-check-button.is-loading {
     cursor: wait;
-    opacity: .78;
+    border-color: #9aa8b6;
+    background: #9aa8b6;
+    color: #fff;
+    opacity: 1;
     transform: none;
     box-shadow: none;
+}
+
+.outlook-pane .outlook-check-button [data-check-loading] {
+    align-items: center;
 }
 
 .outlook-pane .outlook-spinner {
