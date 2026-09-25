@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>ScamSpotter Business</title>
     <link rel="stylesheet" href="/assets/css/app.css">
-    <link rel="stylesheet" href="/integrations/outlook/taskpane.css?v=1.0.2.0">
+    <link rel="stylesheet" href="/integrations/outlook/taskpane.css?v=1.0.3.0">
     <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
 </head>
 <body class="outlook-pane">
@@ -16,7 +16,7 @@
     <p class="outlook-muted">Controleer deze e-mail op bekende scamwerkwijzen en menselijke manipulatie.</p>
     <section data-view="loading" class="outlook-view"><p>Verbinden met ScamSpotter…</p></section>
     <section data-view="login" class="outlook-view" hidden><h2>Inloggen</h2><form data-login-form><label>E-mailadres<input name="email" type="email" autocomplete="username" required></label><label>Wachtwoord<input name="password" type="password" autocomplete="current-password" required></label><button class="button button-orange" type="submit">Inloggen</button><p class="outlook-error" data-login-error></p></form></section>
-    <section data-view="ready" class="outlook-view" hidden><div class="outlook-message-meta"><strong data-subject>Huidige e-mail</strong><span data-sender></span></div><button class="button button-orange outlook-full" data-check>Controleer met ScamSpotter →</button><p class="outlook-muted outlook-small">De volledige inhoud wordt alleen voor deze analyse verwerkt. Een rapport wordt alleen aangemaakt als je dat zelf kiest.</p></section>
+    <section data-view="ready" class="outlook-view" hidden><div class="outlook-message-meta"><strong data-subject>Huidige e-mail</strong><span data-sender></span></div><button class="button button-orange outlook-full outlook-check-button" data-check type="button"><span data-check-label>Controleer met ScamSpotter <span aria-hidden="true">→</span></span><span data-check-loading hidden><span class="outlook-spinner" aria-hidden="true"></span> Bezig met controleren…</span></button><p class="outlook-check-status" data-check-status role="status" aria-live="polite" hidden><span class="outlook-spinner" data-check-spinner aria-hidden="true"></span><span data-check-status-text>We analyseren deze e-mail. Dit kan even duren.</span></p><p class="outlook-muted outlook-small">De volledige inhoud wordt alleen voor deze analyse verwerkt. Een rapport wordt alleen aangemaakt als je dat zelf kiest.</p></section>
     <section data-view="result" class="outlook-view" hidden><div class="outlook-status" data-status></div><h2 data-result-title>Resultaat</h2><p data-result-explanation></p><div class="outlook-signal-box" data-match hidden><strong data-match-name></strong><span data-match-type></span><ul data-signals></ul></div><div class="outlook-signal-box" data-org-match hidden><strong>Organisatiecontext</strong><ul data-org-signals></ul><span class="outlook-muted outlook-small">Aanvullend signaal, geen zelfstandig fraudebewijs.</span></div><p class="outlook-muted outlook-small">Was deze uitleg nuttig?</p><button class="button button-ghost outlook-full" data-feedback="useful">Ja</button><button class="button button-ghost outlook-full" data-feedback="not_useful">Nog niet</button><button class="button button-orange outlook-full" data-report>Meld als verdacht</button><button class="button button-ghost outlook-full" data-reset>Nieuwe controle</button><p class="outlook-muted outlook-small" data-result-note></p></section>
 </main>
 <script src="/integrations/outlook/taskpane.js"></script>

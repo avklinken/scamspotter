@@ -19,7 +19,7 @@ Handmatig sideloaden is een testmethode. In sommige New Outlook-builds kan een h
 
 Als de add-in wel onder **My add-ins** staat maar geen knop in een geopende e-mail toont, is meestal de oude manifestversie gecachet of is het bericht geopend vanuit een niet-ondersteunde mailboxcontext. Verwijder de oude ScamSpotter-entry, sluit Outlook volledig af, download het actuele manifest opnieuw, open [Outlook-add-ins testen](https://aka.ms/olksideload), voeg het bestand opnieuw toe en open een bericht in de primaire Microsoft 365-mailbox. Bij centrale deployment moet de beheerder de nieuwe manifestversie opnieuw uploaden.
 
-De huidige add-in gebruikt een add-in-only XML-manifest, omdat het Microsoft 365 unified manifest niet wordt ondersteund in Outlook op Mac. De `VersionOverrides`-sectie definieert de knop in Message Read; de manifestversie is verhoogd naar `1.0.2.0` en gebruikt PNG-iconen die door Outlook worden ondersteund.
+De huidige add-in gebruikt een add-in-only XML-manifest, omdat het Microsoft 365 unified manifest niet wordt ondersteund in Outlook op Mac. De `VersionOverrides`-sectie definieert de knop in Message Read; de manifestversie is verhoogd naar `1.0.3.0` en gebruikt PNG-iconen die door Outlook worden ondersteund.
 
 ## Rechten
 

@@ -27,7 +27,7 @@ body.outlook-pane {
 .outlook-pane h1 {
     max-width: 100%;
     margin-bottom: 12px;
-    font-size: clamp(1.8rem, 7.5vw, 2.3rem);
+    font-size: clamp(1.75rem, 7vw, 2.05rem);
     line-height: 1.06;
 }
 
@@ -89,6 +89,48 @@ body.outlook-pane {
 
 .outlook-pane .outlook-full {
     margin-top: 4px;
+}
+
+.outlook-pane .outlook-check-button:disabled {
+    cursor: wait;
+    opacity: .78;
+    transform: none;
+    box-shadow: none;
+}
+
+.outlook-pane .outlook-spinner {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    margin-right: 6px;
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    vertical-align: -2px;
+    animation: outlook-spin .7s linear infinite;
+}
+
+.outlook-pane .outlook-check-status {
+    display: flex;
+    align-items: flex-start;
+    margin: 11px 0 0;
+    padding: 10px 12px;
+    border: 1px solid #dce8f3;
+    border-radius: 9px;
+    background: #f4f8fc;
+    color: #52677f;
+    font-size: .74rem;
+    line-height: 1.4;
+}
+
+.outlook-pane .outlook-check-status.is-error {
+    border-color: #f2c3c3;
+    background: #fff4f4;
+    color: #a82b2b;
+}
+
+@keyframes outlook-spin {
+    to { transform: rotate(360deg); }
 }
 
 .outlook-pane form {

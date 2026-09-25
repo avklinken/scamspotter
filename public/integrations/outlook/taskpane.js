@@ -1,5 +1,5 @@
 (() => {
-  const state = { csrf: '', session: null, current: null, checkId: null };
+  const state = { csrf: '', session: null, current: null, checkId: null, checkInFlight: false };
   const view = (name) => document.querySelector(`[data-view="${name}"]`);
   const show = (name) => document.querySelectorAll('[data-view]').forEach((element) => { element.hidden = element.dataset.view !== name; });
   const json = async (url, options = {}) => {
@@ -43,8 +43,26 @@
       document.querySelector('[data-login-error]').textContent = error.message;
     }
   });
-  document.querySelector('[data-check]').addEventListener('click', async (event) => {
-    event.currentTarget.disabled = true;
+  const checkButton = document.querySelector('[data-check]');
+  const checkStatus = document.querySelector('[data-check-status]');
+  const checkStatusText = document.querySelector('[data-check-status-text]');
+  const checkSpinner = document.querySelector('[data-check-spinner]');
+  const setChecking = (checking) => {
+    checkButton.disabled = checking;
+    checkButton.setAttribute('aria-busy', checking ? 'true' : 'false');
+    document.querySelector('[data-check-label]').hidden = checking;
+    document.querySelector('[data-check-loading]').hidden = !checking;
+    if (checking) {
+      checkStatus.hidden = false;
+      checkStatus.classList.remove('is-error');
+      checkStatusText.textContent = 'We analyseren deze e-mail. Dit kan even duren.';
+      checkSpinner.hidden = false;
+    }
+  };
+  checkButton.addEventListener('click', async () => {
+    if (state.checkInFlight || !state.current) return;
+    state.checkInFlight = true;
+    setChecking(true);
     try {
       const payload = await json('/api/v1/business/check', { method: 'POST', headers: { 'X-CSRF-Token': state.csrf }, body: JSON.stringify({ input_type: 'email', ...state.current }) });
       const result = payload.result || {};
@@ -65,8 +83,14 @@
       document.querySelector('[data-org-signals]').innerHTML = organizationSignals.slice(0, 5).map((item) => `<li>${escapeHtml(item.label || item.value || '')}</li>`).join('');
       show('result');
     } catch (error) {
-      document.querySelector('[data-result-note]').textContent = error.message;
-    } finally { event.currentTarget.disabled = false; }
+      checkStatus.hidden = false;
+      checkStatus.classList.add('is-error');
+      checkSpinner.hidden = true;
+      checkStatusText.textContent = `Controle mislukt: ${error.message}`;
+    } finally {
+      state.checkInFlight = false;
+      setChecking(false);
+    }
   });
   document.querySelector('[data-report]').addEventListener('click', async (event) => {
     event.currentTarget.disabled = true;
@@ -82,7 +106,7 @@
       document.querySelector('[data-result-note]').textContent = 'Bedankt voor je feedback.';
     } catch (error) { document.querySelector('[data-result-note]').textContent = error.message; }
   }));
-  document.querySelector('[data-reset]').addEventListener('click', () => { show('ready'); });
+  document.querySelector('[data-reset]').addEventListener('click', () => { checkStatus.hidden = true; show('ready'); });
   const escapeHtml = (value) => String(value).replace(/[&<>'"]/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#039;', '"': '&quot;' }[character]));
   if (window.Office) Office.onReady(loadSession); else loadSession();
 })();
