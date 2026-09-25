@@ -7,8 +7,9 @@
 3. Maak een Business-organisatie via `/admin/business` of met `bin/create-business-org.php`.
 4. Download `/integrations/outlook/manifest.xml`; dit XML-bestand is de registratiebeschrijving voor Outlook, niet een uitvoerbaar programma.
 5. Test handmatig via Outlook → **My add-ins** → **Add a custom add-in** → **Add from File**, of deploy centraal via Microsoft 365 admin center → **Settings → Integrated apps → Deploy Add-in**.
-6. Open daarna een e-mail in de leesweergave. De knop **Controleer met ScamSpotter** staat op de berichtwerkbalk of onder **Apps**.
-7. Test in Outlook on the web en New Outlook met een klein testpubliek voordat je de add-in breed uitrolt.
+6. Test vanuit de primaire Microsoft 365/Exchange-mailbox. POP/IMAP-mailboxen en sommige gedeelde mailbox-contexten activeren Outlook-add-ins niet.
+7. Zet de leesvensterweergave op rechts of onder, open daarna een e-mail. De knop **Controleer met ScamSpotter** staat op de berichtwerkbalk of onder **Apps**.
+8. Test in Outlook on the web en New Outlook met een klein testpubliek voordat je de add-in breed uitrolt.
 
 Microsoft-handleidingen: [sideloaden voor tests](https://learn.microsoft.com/en-us/office/dev/add-ins/outlook/sideload-outlook-add-ins-for-testing) en [centrale deployment](https://learn.microsoft.com/en-us/microsoft-365/admin/manage/manage-deployment-of-add-ins?view=o365-worldwide).
 
@@ -16,7 +17,7 @@ Microsoft-handleidingen: [sideloaden voor tests](https://learn.microsoft.com/en-
 
 Handmatig sideloaden is een testmethode. In sommige New Outlook-builds kan een handmatig toegevoegde custom add-in na het sluiten van het add-invenster of Outlook opnieuw uit de lijst verdwijnen. Voor een blijvende installatie moet een Microsoft 365-beheerder het XML-manifest centraal uitrollen naar de gebruiker of een groep.
 
-Als de add-in wel onder **My add-ins** staat maar geen knop in een geopende e-mail toont, is meestal de oude manifestversie gecachet. Verwijder de oude ScamSpotter-entry, sluit Outlook volledig af, open [Outlook-add-ins testen](https://aka.ms/olksideload), voeg het actuele bestand opnieuw toe en open een bericht. Bij centrale deployment moet de beheerder de nieuwe manifestversie opnieuw uploaden.
+Als de add-in wel onder **My add-ins** staat maar geen knop in een geopende e-mail toont, is meestal de oude manifestversie gecachet of is het bericht geopend vanuit een niet-ondersteunde mailboxcontext. Verwijder de oude ScamSpotter-entry, sluit Outlook volledig af, download het actuele manifest opnieuw, open [Outlook-add-ins testen](https://aka.ms/olksideload), voeg het bestand opnieuw toe en open een bericht in de primaire Microsoft 365-mailbox. Bij centrale deployment moet de beheerder de nieuwe manifestversie opnieuw uploaden.
 
 De huidige add-in gebruikt een add-in-only XML-manifest, omdat het Microsoft 365 unified manifest niet wordt ondersteund in Outlook op Mac. De `VersionOverrides`-sectie definieert de knop in Message Read; de manifestversie is verhoogd naar `1.0.1.0` en gebruikt PNG-iconen die door Outlook worden ondersteund.
 
