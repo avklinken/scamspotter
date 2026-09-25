@@ -4,6 +4,10 @@ body.outlook-pane {
     background: #f6f9fc;
 }
 
+.outlook-pane [hidden] {
+    display: none !important;
+}
+
 .outlook-pane #outlook-app {
     width: 100%;
     min-height: 100vh;
