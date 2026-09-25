@@ -1,0 +1,185 @@
+body.outlook-pane {
+    min-width: 0;
+    overflow-x: hidden;
+    background: #f6f9fc;
+}
+
+.outlook-pane #outlook-app {
+    width: 100%;
+    min-height: 100vh;
+    padding: 20px 18px 28px;
+    background: #fff;
+}
+
+.outlook-pane #outlook-app > img {
+    display: block;
+    width: min(188px, 100%);
+    height: auto;
+    margin-bottom: 17px;
+}
+
+.outlook-pane .eyebrow {
+    margin-bottom: 10px;
+    font-size: .63rem;
+    letter-spacing: .12em;
+}
+
+.outlook-pane h1 {
+    max-width: 100%;
+    margin-bottom: 12px;
+    font-size: clamp(1.8rem, 7.5vw, 2.3rem);
+    line-height: 1.06;
+}
+
+.outlook-pane h2 {
+    max-width: 100%;
+    font-size: 1.35rem;
+}
+
+.outlook-pane .outlook-muted {
+    color: #52677f;
+    font-size: .84rem;
+    line-height: 1.5;
+}
+
+.outlook-pane .outlook-small {
+    font-size: .72rem;
+    line-height: 1.45;
+}
+
+.outlook-pane .outlook-view {
+    margin-top: 22px;
+}
+
+.outlook-pane .outlook-message-meta {
+    display: grid;
+    gap: 4px;
+    margin-bottom: 14px;
+    padding: 13px 14px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--mist-2);
+}
+
+.outlook-pane .outlook-message-meta strong,
+.outlook-pane .outlook-message-meta span {
+    overflow-wrap: anywhere;
+}
+
+.outlook-pane .outlook-message-meta strong {
+    color: var(--navy);
+    font-size: .9rem;
+    line-height: 1.35;
+}
+
+.outlook-pane .outlook-message-meta span {
+    color: var(--muted);
+    font-size: .74rem;
+}
+
+.outlook-pane .button {
+    width: 100%;
+    min-height: 46px;
+    padding: 9px 14px;
+    font-size: .82rem;
+    line-height: 1.25;
+    white-space: normal;
+    text-align: center;
+}
+
+.outlook-pane .outlook-full {
+    margin-top: 4px;
+}
+
+.outlook-pane form {
+    display: grid;
+    gap: 13px;
+}
+
+.outlook-pane form label {
+    display: grid;
+    gap: 5px;
+    color: var(--navy);
+    font-size: .78rem;
+    font-weight: 800;
+}
+
+.outlook-pane form input {
+    width: 100%;
+    min-height: 43px;
+    padding: 9px 11px;
+    border: 1px solid #cbd8e5;
+    border-radius: 9px;
+    background: #fff;
+    color: var(--ink);
+    outline: none;
+}
+
+.outlook-pane form input:focus {
+    border-color: var(--orange);
+    box-shadow: 0 0 0 3px rgba(255, 107, 0, .13);
+}
+
+.outlook-pane .outlook-status {
+    margin-bottom: 13px;
+    padding: 11px 13px;
+    border-radius: 10px;
+    background: #fff7f0;
+    color: var(--orange-dark);
+    font-size: .78rem;
+    font-weight: 800;
+    line-height: 1.35;
+}
+
+.outlook-pane .outlook-signal-box {
+    margin: 14px 0;
+    padding: 14px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--mist-2);
+}
+
+.outlook-pane .outlook-signal-box strong,
+.outlook-pane .outlook-signal-box span {
+    display: block;
+}
+
+.outlook-pane .outlook-signal-box strong {
+    margin-bottom: 3px;
+    color: var(--navy);
+    font-size: .88rem;
+}
+
+.outlook-pane .outlook-signal-box span {
+    color: var(--muted);
+    font-size: .73rem;
+}
+
+.outlook-pane .outlook-signal-box ul {
+    margin: 10px 0 0;
+    padding-left: 18px;
+    color: #52677f;
+    font-size: .76rem;
+    line-height: 1.45;
+}
+
+.outlook-pane .outlook-error {
+    margin: 0;
+    color: var(--red);
+    font-size: .76rem;
+    line-height: 1.4;
+}
+
+@media (max-width: 350px) {
+    .outlook-pane #outlook-app {
+        padding-inline: 14px;
+    }
+
+    .outlook-pane #outlook-app > img {
+        width: 170px;
+    }
+
+    .outlook-pane h1 {
+        font-size: 1.7rem;
+    }
+}
