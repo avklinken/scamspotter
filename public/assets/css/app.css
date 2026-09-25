@@ -345,6 +345,8 @@ p { margin: 0 0 16px; }
 .business-install-card h2 { margin-bottom: 12px; font-size: clamp(1.7rem, 3vw, 2.25rem); }
 .business-install-card > p:not(.eyebrow), .business-info-block p:not(.eyebrow) { color: #52677f; }
 .business-manifest-url { margin: 20px 0 24px; padding: 13px 15px; overflow-wrap: anywhere; border-radius: 9px; background: var(--navy-deep); color: #dceaf5; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: .76rem; }
+.business-install-note { display: grid; gap: 4px; margin: -5px 0 23px; padding: 14px 16px; border-left: 3px solid var(--orange); border-radius: 0 9px 9px 0; background: #fff7f0; color: #52677f; font-size: .84rem; }
+.business-install-note strong { color: var(--navy); font-size: .88rem; }
 .business-install-list { display: grid; gap: 17px; margin: 0 0 22px; padding: 0; list-style: none; counter-reset: install-step; }
 .business-install-list li { display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 12px; align-items: start; color: #52677f; font-size: .87rem; }
 .business-install-list li::before { display: grid; place-items: center; width: 29px; height: 29px; border-radius: 50%; background: var(--mist-2); color: var(--navy); content: counter(install-step); counter-increment: install-step; font-size: .72rem; font-weight: 900; }

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0" xmlns:mailappor="http://schemas.microsoft.com/office/mailappversion" xsi:type="MailApp">
   <Id>4c73eb9b-3211-4c4b-9bb8-7c6e8cb4d8e9</Id>
-  <Version>1.0.0.0</Version>
+  <Version>1.0.1.0</Version>
   <ProviderName>ScamSpotter.nl</ProviderName>
   <DefaultLocale>nl-NL</DefaultLocale>
   <DisplayName DefaultValue="ScamSpotter Business" />
   <Description DefaultValue="Legt uit welke scamwerkwijze achter verdachte zakelijke communicatie zit." />
-  <IconUrl DefaultValue="https://scamspotter.nl/assets/icons/favicon.svg" />
-  <HighResolutionIconUrl DefaultValue="https://scamspotter.nl/assets/icons/favicon.svg" />
+  <IconUrl DefaultValue="https://scamspotter.nl/assets/icons/outlook-icon-64.png" />
+  <HighResolutionIconUrl DefaultValue="https://scamspotter.nl/assets/icons/outlook-icon-128.png" />
   <SupportUrl DefaultValue="https://scamspotter.nl/contact" />
   <AppDomains><AppDomain>https://scamspotter.nl</AppDomain></AppDomains>
   <Hosts><Host Name="Mailbox" /></Hosts>
@@ -18,4 +18,48 @@
   <Permissions>ReadItem</Permissions>
   <Rule xsi:type="RuleCollection" Mode="And"><Rule xsi:type="ItemIs" ItemType="Message" FormType="Read" /></Rule>
   <DisableEntityHighlighting>true</DisableEntityHighlighting>
+  <VersionOverrides xmlns="http://schemas.microsoft.com/office/mailappversionoverrides" xsi:type="VersionOverridesV1_0">
+    <Requirements>
+      <bt:Sets DefaultMinVersion="1.5"><bt:Set Name="Mailbox" /></bt:Sets>
+    </Requirements>
+    <Hosts>
+      <Host xsi:type="MailHost">
+        <DesktopFormFactor>
+          <ExtensionPoint xsi:type="MessageReadCommandSurface">
+            <OfficeTab id="TabDefault">
+              <Group id="ScamSpotter.MessageReadGroup">
+                <Label resid="GroupLabel" />
+                <Control xsi:type="Button" id="ScamSpotter.CheckButton">
+                  <Label resid="CheckButtonLabel" />
+                  <Supertip>
+                    <Title resid="CheckButtonLabel" />
+                    <Description resid="CheckButtonTip" />
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="Icon.16x16" />
+                    <bt:Image size="32" resid="Icon.32x32" />
+                    <bt:Image size="80" resid="Icon.80x80" />
+                  </Icon>
+                  <Action xsi:type="ShowTaskpane"><SourceLocation resid="Taskpane.Url" /></Action>
+                </Control>
+              </Group>
+            </OfficeTab>
+          </ExtensionPoint>
+        </DesktopFormFactor>
+      </Host>
+    </Hosts>
+    <Resources>
+      <bt:Images>
+        <bt:Image id="Icon.16x16" DefaultValue="https://scamspotter.nl/assets/icons/outlook-icon-16.png" />
+        <bt:Image id="Icon.32x32" DefaultValue="https://scamspotter.nl/assets/icons/outlook-icon-32.png" />
+        <bt:Image id="Icon.80x80" DefaultValue="https://scamspotter.nl/assets/icons/outlook-icon-80.png" />
+      </bt:Images>
+      <bt:Urls><bt:Url id="Taskpane.Url" DefaultValue="https://scamspotter.nl/integrations/outlook/taskpane.html" /></bt:Urls>
+      <bt:ShortStrings>
+        <bt:String id="GroupLabel" DefaultValue="ScamSpotter" />
+        <bt:String id="CheckButtonLabel" DefaultValue="Controleer met ScamSpotter" />
+      </bt:ShortStrings>
+      <bt:LongStrings><bt:String id="CheckButtonTip" DefaultValue="Leg uit welke scamwerkwijze achter dit bericht kan zitten." /></bt:LongStrings>
+    </Resources>
+  </VersionOverrides>
 </OfficeApp>
