@@ -11,6 +11,7 @@ use App\Repositories\SourceRepository;
 use App\Repositories\SubmissionRepository;
 use App\Services\SeoService;
 use App\Services\BusinessProvisioningService;
+use App\Services\ReviewPublicationService;
 
 final class AdminController extends Controller
 {
@@ -235,8 +236,23 @@ final class AdminController extends Controller
                 'notes' => trim((string) $request->post('notes', '')),
                 'id' => $id,
             ]);
-            $this->audit('review_' . $status, 'review_queue', $id, []);
-            flash('success', 'Review-item bijgewerkt.');
+            $publishedAlertId = null;
+            if ($status === 'approved') {
+                try {
+                    $publishedAlertId = (new ReviewPublicationService($this->db()))->publishApproved($id);
+                } catch (\Throwable $exception) {
+                    error_log('Review-publicatie mislukt: ' . $exception->getMessage());
+                    flash('error', 'Review goedgekeurd, maar de actuele waarschuwing kon niet worden gepubliceerd.');
+                }
+            }
+            $this->audit('review_' . $status, 'review_queue', $id, ['alert_id' => $publishedAlertId]);
+            if ($status === 'approved' && $publishedAlertId !== null) {
+                flash('success', 'Review-item goedgekeurd en actuele waarschuwing gepubliceerd.');
+            } elseif ($status !== 'approved') {
+                flash('success', 'Review-item bijgewerkt.');
+            } elseif ($publishedAlertId === null) {
+                flash('success', 'Review-item goedgekeurd; er was geen nieuwe actuele waarschuwing nodig.');
+            }
         }
         Response::redirect(url('/admin/review'));
     }
