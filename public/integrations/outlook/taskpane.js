@@ -46,7 +46,6 @@
   const checkButton = document.querySelector('[data-check]');
   const checkStatus = document.querySelector('[data-check-status]');
   const checkStatusText = document.querySelector('[data-check-status-text]');
-  const checkSpinner = document.querySelector('[data-check-spinner]');
   const setChecking = (checking) => {
     checkButton.disabled = checking;
     checkButton.classList.toggle('is-loading', checking);
@@ -57,7 +56,6 @@
       checkStatus.hidden = false;
       checkStatus.classList.remove('is-error');
       checkStatusText.textContent = 'We analyseren deze e-mail. Dit kan even duren.';
-      checkSpinner.hidden = false;
     }
   };
   checkButton.addEventListener('click', async () => {
@@ -86,7 +84,6 @@
     } catch (error) {
       checkStatus.hidden = false;
       checkStatus.classList.add('is-error');
-      checkSpinner.hidden = true;
       checkStatusText.textContent = `Controle mislukt: ${error.message}`;
     } finally {
       state.checkInFlight = false;
