@@ -12,7 +12,19 @@ $isType = ($item['kind'] ?? '') === 'type';
         <h2>Wat kun je doen?</h2><p>Reageer niet vanuit het bericht. Maak geen geld over, deel geen codes en neem bij twijfel zelf contact op met de organisatie. Heb je al betaald of gegevens gedeeld? Neem dan zo snel mogelijk contact op met je bank en doe zo nodig aangifte.</p>
         <?php if (($item['alerts'] ?? []) !== []): ?><h2>Actuele waarschuwingen</h2><div class="alert-list"><?php foreach ($item['alerts'] as $alert): ?><a class="alert-row" href="<?= e(url('/waarschuwingen/' . $alert['slug'])) ?>"><div><h3><?= e($alert['title']) ?></h3><p><?= e($alert['summary']) ?></p></div><div class="alert-row-right"><span class="tag tag-danger">Actief</span><span class="card-link">Lees</span></div></a><?php endforeach; ?></div><?php endif; ?>
     <?php elseif ($isType): ?>
-        <h2>Wat is <?= e($item['name']) ?>?</h2><p><?= nl2br(e((string) ($item['content'] ?? $item['summary'] ?? ''))) ?></p><h2>Bekende varianten</h2><div class="variant-grid"><?php foreach (($item['variants'] ?? []) as $variant): ?><a class="variant-card" href="<?= e(url('/oplichting/' . $variant['slug'])) ?>"><strong><?= e($variant['name']) ?></strong><p><?= e($variant['summary']) ?></p></a><?php endforeach; ?></div>
+        <h2>Wat is <?= e($item['name']) ?>?</h2>
+        <p><?= nl2br(e((string) ($item['content'] ?? $item['summary'] ?? ''))) ?></p>
+        <h2>Waar let je op?</h2>
+        <ul class="indicator-list">
+            <li><span><strong>Onverwacht verzoek</strong><br>De boodschap wijkt af van wat je normaal van deze persoon of organisatie ontvangt.</span></li>
+            <li><span><strong>Tijdsdruk of geheimhouding</strong><br>Je moet snel handelen of mag het verzoek niet met een collega bespreken.</span></li>
+            <li><span><strong>Afwijkende betaling of link</strong><br>Er wordt gevraagd om geld, codes of gegevens via een nieuw kanaal of een onbekende link.</span></li>
+            <li><span><strong>Geen onafhankelijke controle</strong><br>De afzender stuurt aan op bevestiging via hetzelfde kanaal in plaats van een officieel contactpunt.</span></li>
+        </ul>
+        <h2>Wat kun je doen?</h2>
+        <p>Neem geen beslissing vanuit het bericht zelf. Controleer het verzoek via een vertrouwd kanaal dat je zelf hebt opgezocht en volg bij betalingen altijd de normale goedkeuringsprocedure. Deel geen codes of wachtwoorden en meld verdachte communicatie aan je organisatie of aan ScamSpotter.</p>
+        <h2>Bekende varianten</h2>
+        <?php if (!empty($item['variants'])): ?><p>Dezelfde scam kan er in de praktijk anders uitzien. Deze varianten gebruiken vaak een ander kanaal of een andere aanleiding, maar proberen dezelfde controle over te slaan.</p><div class="variant-grid"><?php foreach ($item['variants'] as $variant): ?><a class="variant-card" href="<?= e(url('/oplichting/' . $variant['slug'])) ?>"><strong><?= e($variant['name']) ?></strong><p><?= e($variant['summary']) ?></p></a><?php endforeach; ?></div><?php else: ?><p>Voor dit scamtype zijn nog geen afzonderlijke varianten uitgewerkt. We vullen dit overzicht aan zodra er voldoende betrouwbare patronen zijn.</p><?php endif; ?>
     <?php else: ?>
         <h2>Over deze scamfamilie</h2><p><?= nl2br(e((string) ($item['description'] ?? $item['summary'] ?? ''))) ?></p><h2>Scamtypes binnen deze familie</h2><div class="variant-grid"><?php foreach (($item['types'] ?? []) as $type): ?><a class="variant-card" href="<?= e(url('/oplichting/' . $type['slug'])) ?>"><strong><?= e($type['name']) ?></strong><p><?= e($type['summary']) ?></p></a><?php endforeach; ?></div>
     <?php endif; ?>

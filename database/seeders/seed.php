@@ -66,7 +66,7 @@ try {
         ['phishing-identiteitsfraude', 'credential-harvesting', 'Credential harvesting', 'Het verzamelen van gebruikersnamen, wachtwoorden of eenmalige codes via een valse inlogflow.', 'De pagina lijkt op de echte dienst en vraagt om meer gegevens dan normaal.'],
         ['impersonatiefraude', 'bankhelpdeskfraude', 'Bankhelpdeskfraude', 'Iemand doet zich voor als bankmedewerker en vraagt je geld veilig te stellen of codes te delen.', 'De beller gebruikt autoriteit en tijdsdruk. Een bank vraagt je niet om geld naar een veilige rekening over te boeken.'],
         ['impersonatiefraude', 'whatsapp-hulpvraagfraude', 'WhatsApp-hulpvraagfraude', 'Een oplichter doet zich voor als familielid met een nieuw nummer en vraagt om snel geld.', 'Het bericht gebruikt herkenbare familie-informatie en zegt dat bellen even niet kan.'],
-        ['impersonatiefraude', 'ceo-fraude', 'CEO-fraude', 'Een verzoek lijkt van een directeur of collega te komen en vraagt om een betaling of geheimhouding.', 'De afzender wijkt af van de normale werkwijze en probeert controle door een tweede persoon te omzeilen.'],
+        ['impersonatiefraude', 'ceo-fraude', 'CEO-fraude', 'Een oplichter doet zich voor als directeur, bestuurder, collega of zakenpartner en stuurt aan op een ongebruikelijke betaling, wijziging of geheimhouding.', "Bij CEO-fraude doet een oplichter zich voor als iemand met gezag binnen of rond een organisatie. Het verzoek komt vaak via e-mail, WhatsApp of telefoon en wijkt af van de normale werkwijze.\n\nDe afzender gebruikt tijdsdruk, vertrouwelijkheid en details uit de organisatie om een betaling, wijziging van rekeningnummer of aankoop los te krijgen. De naam en handtekening kunnen kloppen terwijl het e-mailadres, telefoonnummer of betaalverzoek vals is."],
         ['advance-fee-fraude', 'fake-giveaway', 'Fake giveaway', 'Een gratis product of prijs blijkt afhankelijk van transportkosten, administratiekosten of een voorschot.', 'Het verhaal is emotioneel en aantrekkelijk; betalen is de voorwaarde om iets “gratis” te ontvangen.'],
         ['advance-fee-fraude', 'recovery-scam', 'Recovery scam', 'Na eerdere fraude belooft iemand je geld terug te halen tegen een nieuwe betaling.', 'De oplichter kent details van een eerdere schade en vraagt om kosten, codes of toegang.'],
         ['handelsfraude', 'nepwebshop', 'Nepwebshop', 'Een webshop biedt producten aan maar levert niet, of verzamelt betaal- en persoonsgegevens.', 'Extreem lage prijzen, recente domeinen, afwijkende betaalmethodes en ontbrekende contactgegevens zijn signalen.'],
@@ -97,6 +97,10 @@ try {
         ['bankhelpdeskfraude', 'veilige-rekening-bankhelpdeskfraude', 'Veilige rekening bij bankhelpdeskfraude', 'Een nepbankmedewerker zegt dat je geld naar een veilige rekening moet overboeken.', 'De beller gebruikt angst over fraude op je rekening en wil dat je codes deelt of geld overmaakt. Banken vragen dit niet.'],
         ['quishing', 'qr-code-parkeerboete', 'QR-code voor parkeerboete', 'Een QR-code op een brief of bericht leidt naar een valse betaalpagina voor een parkeerboete.', 'De QR-code verbergt de uiteindelijke URL. Controleer boetes via het officiële loket in plaats van de QR-code.'],
         ['booking-reservation-scam', 'booking-reservering-betalingslink', 'Booking reservation payment scam', 'Een bericht over een bestaande reservering vraagt om betaling of verificatie via een nieuwe link.', 'De afzender creëert tijdsdruk en vraagt om buiten het platform te betalen.'],
+        ['ceo-fraude', 'spoedbetaling-namens-directeur', 'Spoedbetaling namens de directeur', 'Een bericht lijkt van een directeur of bestuurder te komen en vraagt om snel een betaling uit te voeren.', 'De afzender benadrukt dat het vertrouwelijk is en dat de normale goedkeuringsroute niet kan worden gevolgd.'],
+        ['ceo-fraude', 'gewijzigd-rekeningnummer-leverancier', 'Gewijzigd rekeningnummer van een leverancier', 'Een bekende leverancier of directeur meldt dat een factuur voortaan naar een ander rekeningnummer moet worden betaald.', 'De wijziging komt onverwacht en het nieuwe rekeningnummer wordt alleen in het bericht bevestigd.'],
+        ['ceo-fraude', 'cadeaubonnen-voor-directeur', 'Cadeaubonnen voor de directeur', 'Een vermeende leidinggevende vraagt om cadeaubonnen te kopen en de codes door te sturen.', 'Het verzoek wordt als een snelle, geheime attentie gepresenteerd en controle door collega’s wordt ontmoedigd.'],
+        ['ceo-fraude', 'whatsapp-namens-directeur', 'WhatsApp-bericht namens de directeur', 'Een oplichter gebruikt WhatsApp of een nieuw nummer om zich voor te doen als een directeur of manager.', 'De afzender houdt het gesprek kort en vraagt om direct te handelen omdat bellen of overleg niet uitkomt.'],
         ['recovery-scam', 'geld-terug-na-fraude', 'Geld terug na eerdere fraude', 'Een zogenaamde specialist belooft eerder verloren geld terug te halen voor een voorschot.', 'Er wordt vaak verwezen naar een dossiernummer en daarna gevraagd om kosten of remote access.'],
         ['nepwebshop', 'extreem-lage-prijs-webshop', 'Webshop met extreem lage prijs', 'Een professioneel ogende webshop verkoopt populaire producten ver onder de marktprijs.', 'Na betaling wordt niet geleverd of worden aanvullende gegevens gevraagd. Controleer bedrijfsgegevens en onafhankelijke ervaringen.'],
     ];
@@ -163,6 +167,30 @@ try {
             ['commerce', 'webshop', 'De campagne gebruikt een online winkel als context.', 1.5],
             ['payment', 'alleen vooraf betalen', 'Er is geen normale veilige betaaloptie beschikbaar.', 2.8],
         ],
+        'spoedbetaling-namens-directeur' => [
+            ['impersonation', 'directeur', 'De afzender gebruikt de naam of rol van een directeur of bestuurder.', 2.8],
+            ['urgency', 'met spoed', 'Tijdsdruk moet voorkomen dat iemand het verzoek controleert.', 2.6],
+            ['payment', 'betaling uitvoeren', 'Het uiteindelijke doel is een ongebruikelijke overboeking.', 3.2],
+            ['secrecy', 'vertrouwelijk', 'Geheimhouding maakt controle door een collega moeilijker.', 2.8],
+        ],
+        'gewijzigd-rekeningnummer-leverancier' => [
+            ['impersonation', 'leverancier', 'Een bekende leverancier of zakenpartner wordt nagebootst.', 2.2],
+            ['payment', 'rekeningnummer gewijzigd', 'De betaalgegevens wijken onverwacht af van eerdere facturen.', 3.5],
+            ['action', 'factuur betalen', 'Een bestaande factuur wordt gebruikt om de betaling geloofwaardig te maken.', 2.4],
+            ['action', 'bevestig per e-mail', 'De afzender probeert onafhankelijke verificatie te vermijden.', 2.4],
+        ],
+        'cadeaubonnen-voor-directeur' => [
+            ['impersonation', 'directeur', 'De afzender doet zich voor als een leidinggevende.', 2.6],
+            ['payment', 'cadeaubonnen', 'Cadeaubonnen zijn na aankoop moeilijk terug te halen.', 3.2],
+            ['action', 'codes doorsturen', 'De oplichter wil de codes of foto’s direct ontvangen.', 3.0],
+            ['secrecy', 'geheim houden', 'Geheimhouding moet collega’s buiten het verzoek houden.', 2.5],
+        ],
+        'whatsapp-namens-directeur' => [
+            ['channel', 'WhatsApp', 'De oplichter gebruikt een chatkanaal dat informeel en snel voelt.', 1.8],
+            ['channel', 'nieuw nummer', 'Een nieuw nummer maakt controle van de identiteit lastiger.', 2.8],
+            ['impersonation', 'manager', 'De afzender verwijst naar een manager of directeur.', 2.4],
+            ['urgency', 'kun je dit regelen', 'Een korte opdracht stuurt aan op direct handelen.', 2.2],
+        ],
     ];
     foreach ($indicatorsByVariant as $variantSlug => $indicators) {
         foreach ($indicators as [$indicatorType, $value, $explanation, $weight]) {
@@ -185,7 +213,7 @@ try {
     }
 
     $aliasStatement = $db->prepare('INSERT IGNORE INTO scam_aliases (entity_type, entity_id, alias, normalized_alias) VALUES (:entity_type, :entity_id, :alias, :normalized_alias)');
-    foreach ([['variant', $variantIds['gratis-piano-scam'], 'gratis piano'], ['variant', $variantIds['gratis-piano-scam'], 'piano van overleden echtgenoot'], ['type', $typeIds['bankhelpdeskfraude'], 'veilige rekening fraude'], ['type', $typeIds['quishing'], 'qr phishing']] as [$entityType, $entityId, $alias]) {
+    foreach ([['variant', $variantIds['gratis-piano-scam'], 'gratis piano'], ['variant', $variantIds['gratis-piano-scam'], 'piano van overleden echtgenoot'], ['type', $typeIds['bankhelpdeskfraude'], 'veilige rekening fraude'], ['type', $typeIds['quishing'], 'qr phishing'], ['type', $typeIds['ceo-fraude'], 'business email compromise'], ['type', $typeIds['ceo-fraude'], 'BEC'], ['type', $typeIds['ceo-fraude'], 'directiefraude']] as [$entityType, $entityId, $alias]) {
         $aliasStatement->execute(['entity_type' => $entityType, 'entity_id' => $entityId, 'alias' => $alias, 'normalized_alias' => mb_strtolower($alias)]);
     }
 
