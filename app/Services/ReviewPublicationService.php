@@ -52,7 +52,7 @@ final class ReviewPublicationService
 
             $variantId = $this->resolveVariant($analysis, (string) $review['title'] . "\n" . (string) $review['raw_content']);
             if (str_starts_with((string) ($review['external_id'] ?? ''), 'seed-') && $variantId !== null) {
-                $seedAlertId = $this->publishedAlertForVariant((int) $review['source_id'], $variantId);
+                $seedAlertId = $this->publishedAlertForVariant($variantId);
                 if ($seedAlertId !== null) {
                     $this->linkSource($review, $seedAlertId, (string) $review['title']);
                     $this->markProcessed($review);
@@ -126,12 +126,12 @@ final class ReviewPublicationService
         return $alertId === false ? null : (int) $alertId;
     }
 
-    private function publishedAlertForVariant(int $sourceId, int $variantId): ?int
+    private function publishedAlertForVariant(int $variantId): ?int
     {
         $statement = $this->db->prepare("SELECT id FROM scam_alerts
-            WHERE source_id = :source_id AND variant_id = :variant_id AND status = 'published'
+            WHERE variant_id = :variant_id AND status = 'published'
             ORDER BY id DESC LIMIT 1");
-        $statement->execute(['source_id' => $sourceId, 'variant_id' => $variantId]);
+        $statement->execute(['variant_id' => $variantId]);
         $alertId = $statement->fetchColumn();
         return $alertId === false ? null : (int) $alertId;
     }
