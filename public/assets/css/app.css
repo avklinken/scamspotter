@@ -177,8 +177,10 @@ p { margin: 0 0 16px; }
 .taxonomy-type strong { display: block; margin-bottom: 3px; }
 .taxonomy-type small { color: var(--muted); }
 .variant-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 26px; }
-.variant-card { padding: 18px; border: 1px solid var(--line); border-radius: 12px; background: #fff; }
-.variant-card small { color: var(--muted); }
+.variant-card { display: flex; flex-direction: column; align-items: flex-start; gap: 7px; padding: 18px; border: 1px solid var(--line); border-radius: 12px; background: #fff; }
+.variant-card small { display: block; color: var(--muted); line-height: 1.35; }
+.variant-card strong { display: block; line-height: 1.25; }
+.variant-card p { margin: 0; }
 .indicator-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 0; list-style: none; }
 .indicator-list li { display: flex; gap: 10px; padding: 12px; border-radius: 10px; background: var(--mist-2); color: #43566d; font-size: .88rem; overflow-wrap: anywhere; }
 .indicator-list li::before { flex: 0 0 auto; color: var(--orange); content: "✓"; font-weight: 900; }
