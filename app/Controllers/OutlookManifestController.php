@@ -11,7 +11,7 @@ final class OutlookManifestController extends Controller
 {
     public function manifest(Request $request): void
     {
-        $version = '1.0.7.0';
+        $version = '1.0.8.0';
         $baseUrl = rtrim(url(''), '/');
         $clientId = trim((string) Env::get('MICROSOFT_ENTRA_CLIENT_ID', ''));
         $resource = trim((string) Env::get('MICROSOFT_ENTRA_RESOURCE', ''));
