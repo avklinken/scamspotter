@@ -8,6 +8,7 @@ use App\Http\Response;
 use App\Repositories\ScamRepository;
 use App\Services\BusinessAuthService;
 use App\Services\OpenAIService;
+use App\Services\MicrosoftIdentityService;
 use App\Services\OrganizationCheckService;
 use App\Services\PlanService;
 use App\Services\PlanLimitException;
@@ -20,7 +21,12 @@ final class BusinessApiController extends Controller
     public function session(Request $request): never
     {
         $user = business_user();
-        Response::json(['authenticated' => $user !== null, 'user' => $user, 'csrf' => $user !== null ? csrf_token() : null]);
+        Response::json([
+            'authenticated' => $user !== null,
+            'user' => $user,
+            'csrf' => $user !== null ? csrf_token() : null,
+            'sso_enabled' => MicrosoftIdentityService::enabled(),
+        ]);
     }
 
     public function check(Request $request): never

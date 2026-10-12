@@ -9,6 +9,7 @@ use App\Controllers\BusinessController;
 use App\Controllers\CheckerController;
 use App\Controllers\PublicController;
 use App\Controllers\ReportController;
+use App\Controllers\OutlookManifestController;
 use App\Http\Request;
 use App\Router;
 
@@ -84,6 +85,7 @@ $router->post('/business/settings/api-key', [BusinessController::class, 'createA
 $router->post('/business/settings/api-key/revoke', [BusinessController::class, 'revokeApiKey']);
 
 $router->post('/api/v1/business/login', [BusinessAuthController::class, 'apiLogin']);
+$router->post('/api/v1/business/sso/microsoft', [BusinessAuthController::class, 'apiMicrosoftSso']);
 $router->post('/api/v1/business/logout', [BusinessAuthController::class, 'apiLogout']);
 $router->get('/api/v1/business/session', [BusinessApiController::class, 'session']);
 $router->post('/api/v1/business/check', [BusinessApiController::class, 'check']);
@@ -92,6 +94,8 @@ $router->post('/api/v1/business/report', [BusinessApiController::class, 'report'
 $router->post('/api/v1/business/feedback', [BusinessApiController::class, 'feedback']);
 $router->get('/api/v1/business/usage', [BusinessApiController::class, 'usage']);
 $router->get('/api/v1/intelligence/feed', [BusinessApiController::class, 'intelligence']);
+
+$router->get('/integrations/outlook/manifest.xml', [OutlookManifestController::class, 'manifest']);
 
 $router->get('/admin/login', [AuthController::class, 'loginForm']);
 $router->post('/admin/login', [AuthController::class, 'login']);

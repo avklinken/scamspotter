@@ -120,7 +120,7 @@ Maak voor een lokale pilot een organisatie en Business-owner aan:
 php bin/create-business-org.php medewerker@example.com "Naam medewerker" "Voorbeeld BV" 'gebruik-een-lang-uniek-wachtwoord' voorbeeld-bv
 ```
 
-Business-login: `/business/login`. De interne Outlook-add-in staat in `public/integrations/outlook/manifest.xml` en gebruikt `ReadItem`; automatische mailboxanalyse is niet ingeschakeld.
+Business-login: `/business/login`. Het Outlook-manifest staat op `/integrations/outlook/manifest.xml` en wordt met de Microsoft 365 SSO-configuratie uit de omgeving gegenereerd. De add-in gebruikt `ReadItem`; automatische mailboxanalyse is niet ingeschakeld. Zie `docs/outlook-add-in.md` voor Entra-configuratie.
 
 De tabel `analysis_jobs` en `AnalysisJobService` leggen alvast een tenantgebonden queue-contract vast voor een latere Protect-worker. Er is nu geen Graph-webhook, mailboxscan of automatische jobproducer geactiveerd; `php bin/queue-status.php` is alleen een operationele statuscontrole.
 

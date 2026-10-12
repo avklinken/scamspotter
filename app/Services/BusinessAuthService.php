@@ -33,6 +33,12 @@ final class BusinessAuthService
     }
 
     /** @return array<string, mixed>|null */
+    public function loginWithMicrosoftToken(string $token): ?array
+    {
+        return (new MicrosoftIdentityService($this->db))->authenticate($token);
+    }
+
+    /** @return array<string, mixed>|null */
     public function authenticateApiKey(string $token): ?array
     {
         if ($token === '') {

@@ -63,9 +63,9 @@ Er worden geen inkomende mailboxen automatisch gescand. Dat beperkt privacyrisic
 
 De add-in leest uitsluitend het geopende bericht via Office.js. `ReadItem` is voldoende voor de handmatige flow. De add-in schrijft niets terug naar het bericht en gebruikt geen Microsoft Graph application permission.
 
-### Later: Entra ID
+### Entra ID
 
-Entra ID kan Business-login vervangen of aanvullen. De token moet de tenant-id en subject bevatten; de server koppelt die waarden aan `microsoft_tenants` en een organisatie. Een organisatie-id uit een URL is nooit een autorisatiebron.
+Entra ID vervangt de Outlook Business-login. De token moet de tenant-id en subject bevatten; de server koppelt die waarden aan `microsoft_tenants` en een organisatie. Een organisatie-id uit een URL is nooit een autorisatiebron. De configuratie staat in `docs/outlook-add-in.md`.
 
 ### Later: Protect
 
@@ -225,7 +225,7 @@ Stabiliseer publieke content, Business pilot, tenantisolatie, retentie, feedback
 
 ### Next
 
-Verbeter Outlook onboarding, voeg Entra ID met minimale scopes toe, introduceer betaalbare planadministratie en test de add-in bij design partners.
+Verbeter Outlook onboarding, houd Entra ID met minimale scopes stabiel, introduceer betaalbare planadministratie en test de add-in bij design partners.
 
 ### Later
 

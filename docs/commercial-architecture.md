@@ -19,7 +19,7 @@ De publieke `checks` en `submissions` blijven consumententabellen. Zakelijke dat
 
 ## Microsoft 365
 
-De eerste Outlook-add-in leest alleen het huidige item via Office.js met `ReadItem`. Er is geen brede Graph-mailboxpermission nodig voor het handmatige pilotpad. De add-in kan later worden gekoppeld aan Microsoft Entra ID en tenantconsent. Automatische monitoring is bewust een aparte fase met Graph change notifications, queueing, privacybeleid en strengere permissions.
+De eerste Outlook-add-in leest alleen het huidige item via Office.js met `ReadItem`. Er is geen brede Graph-mailboxpermission nodig voor het handmatige pilotpad. Microsoft Entra ID en tenantconsent verzorgen de individuele Business-aanmelding; automatische monitoring is bewust een aparte fase met Graph change notifications, queueing, privacybeleid en strengere permissions.
 
 ## Tenantisolatie
 
